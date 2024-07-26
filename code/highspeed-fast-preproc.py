@@ -56,14 +56,14 @@ input_trans = 'sub-*_rec-prenorm_from-fsnative_to-T1w_mode-image_xfm.txt'
 
 if 'linux' in sys.platform:
 
-    dl.get(glob.glob(os.path.join(path_bids, '*.json')))
-    dl.get(glob.glob(os.path.join(path_bids, '*', '*', '*.json')))
-    dl.get(glob.glob(os.path.join(path_bids, '*', '*', '*', '*.json')))
+    dl.get(glob.glob(os.path.join(path_bids, '*.json')), jobs=48)
+    dl.get(glob.glob(os.path.join(path_bids, '*', '*', '*.json')), jobs=48)
+    dl.get(glob.glob(os.path.join(path_bids, '*', '*', '*', '*.json')), jobs=48)
 
-    dl.get(glob.glob(os.path.join(path_func, input_func)))
-    dl.get(glob.glob(os.path.join(path_parc, input_parc)))
-    dl.get(glob.glob(os.path.join(path_func, input_mask)))
-    dl.get(glob.glob(os.path.join(path_anat, input_trans)))
+    dl.get(glob.glob(os.path.join(path_func, input_func)), jobs=48)
+    dl.get(glob.glob(os.path.join(path_parc, input_parc)), jobs=48)
+    dl.get(glob.glob(os.path.join(path_func, input_mask)), jobs=48)
+    dl.get(glob.glob(os.path.join(path_anat, input_trans)), jobs=48)
 
 templates = dict(
         input_func=os.path.join(path_temp_func, input_func),
