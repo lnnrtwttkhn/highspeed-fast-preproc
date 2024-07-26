@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
-import nest_asyncio
-nest_asyncio.apply()
 import glob
 from datetime import datetime
 import bids
