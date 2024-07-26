@@ -35,4 +35,12 @@ save_deps:
 	@$(VENV_DIR)/bin/pip freeze > $(REQUIREMENTS_FILE)
 	@echo "Dependencies saved."
 
-# By default, running `make` will run the `all` target
+.PHONY: siblings
+siblings:
+	-datalad siblings add --dataset . --name gin --url git@gin.g-node.org:/lnnrtwttkhn/highspeed-fast-preproc.git
+	-datalad siblings configure --dataset . --name origin --publish-depends gin
+	-datalad siblings add --dataset inputs/bids --name gin --url git@gin.g-node.org:/lnnrtwttkhn/highspeed-fast-bids.git
+	-datalad siblings add --dataset inputs/bids --name local --url ../../../highspeed-fast-bids
+	-datalad siblings add --dataset inputs/fmriprep --name gin --url git@gin.g-node.org:/lnnrtwttkhn/highspeed-fast-fmriprep.git
+	-datalad siblings add --dataset inputs/fmriprep --name local --url ../../../highspeed-fast-fmriprep
+	
