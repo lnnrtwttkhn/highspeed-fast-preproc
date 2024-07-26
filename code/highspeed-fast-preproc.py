@@ -75,7 +75,6 @@ module load fsl/5.0
 module load freesurfer/6.0.0
 """.format(path_work, path_logs)
 
-bids.config.set_option('extension_initial_dot', True)
 bids_layout = bids.BIDSLayout(root=path_bids)
 sub_list = ['sub-' + x for x in sorted(bids_layout.get_subjects())]
 infosource = Node(IdentityInterface(fields=['subject_id']), name='infosource')
