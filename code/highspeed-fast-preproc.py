@@ -3,25 +3,24 @@
 import os
 import sys
 import glob
+import random
 from datetime import datetime
 import bids
 import datalad.api as dl
 from nipype.interfaces.utility import IdentityInterface
 from nipype.interfaces.io import SelectFiles, DataSink
+from nipype.interfaces.freesurfer import Binarize
 from nipype.pipeline.engine import Workflow, Node, MapNode
 from niflow.nipype1.workflows.fmri.fsl import create_susan_smooth
-from nipype.interfaces.freesurfer import Binarize
 
 
 def find_root(project_name):
-    import os
-    import random
     path_root = None
     roots = [os.getenv('PWD'), os.getcwd()]
     roots_project = [x for x in roots if project_name in x]
     roots_home = [x for x in roots_project if os.getenv('HOME') in x]
     path_root = random.choice(roots_home).split(project_name)[0] + project_name
-    return(path_root)
+    return path_root
 
 
 now = datetime.now().strftime("%Y%m%d_%H%M%S")
