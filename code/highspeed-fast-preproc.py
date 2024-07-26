@@ -28,12 +28,13 @@ now = datetime.now().strftime("%Y%m%d_%H%M%S")
 os.environ['FSLOUTPUTTYPE'] = 'NIFTI_GZ'
 os.environ['SUBJECTS_DIR'] = '/opt/software/freesurfer/6.0.0/subjects'
 
-path_root = find_root(project_name='zoo-preproc')
-path_input = os.path.join(path_root, 'input')
+project_name = 'highspeed-fast-preproc'
+path_root = find_root(project_name=project_name)
+path_input = os.path.join(path_root, 'inputs')
 path_bids = os.path.join(path_input, 'bids')
 path_work = os.path.join(path_root, 'work')
 path_logs = os.path.join(path_root, 'logs', now)
-path_fmriprep = os.path.join(path_input, 'fmriprep', 'fmriprep')
+path_fmriprep = os.path.join(path_input, 'fmriprep')
 path_func = os.path.join(path_fmriprep, '*', '*', 'func')
 path_temp = os.path.join(path_fmriprep, '{subject_id}', '*', 'func')
 path_output = os.path.join(path_root, 'preproc')
