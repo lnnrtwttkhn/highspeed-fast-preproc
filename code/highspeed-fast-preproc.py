@@ -77,10 +77,10 @@ job_template = """#!/bin/bash
 #SBATCH --mail-type NONE
 #SBATCH --workdir {}
 #SBATCH --output {}
-module load virtualenvwrapper
-workon highspeed-fast-preproc
+source venv/bin/activate
 module load fsl/5.0
 module load freesurfer/6.0.0
+module load ants
 """.format(path_work, path_logs)
 
 bids_layout = bids.BIDSLayout(root=path_bids)
