@@ -72,7 +72,7 @@ job_template = """#!/bin/bash
 #SBATCH --workdir {}
 #SBATCH --output {}
 module load virtualenvwrapper
-workon zoo-preproc
+workon highspeed-fast-preproc
 module load fsl/5.0
 module load freesurfer/6.0.0
 """.format(path_work, path_logs)
