@@ -7,7 +7,10 @@ PYTHON := python3
 # Define the requirements file
 REQUIREMENTS_FILE := requirements.txt
 
-.PHONY: all create_venv install_deps clean activate save_deps
+# Define the Python script to run
+PYTHON_SCRIPT := code/highspeed-fast-preproc.py
+
+.PHONY: all create_venv install_deps clean activate save_deps run_script
 
 all: create_venv install_deps
 
@@ -44,3 +47,7 @@ siblings:
 	-datalad siblings add --dataset inputs/fmriprep --name gin --url git@gin.g-node.org:/lnnrtwttkhn/highspeed-fast-fmriprep.git
 	-datalad siblings add --dataset inputs/fmriprep --name local --url ../../../highspeed-fast-fmriprep
 	
+run_script: create_venv install_deps
+	@echo "Running $(PYTHON_SCRIPT) inside the virtual environment..."
+	@source $(VENV_DIR)/bin/activate && python $(PYTHON_SCRIPT)
+	@echo "Script executed."
