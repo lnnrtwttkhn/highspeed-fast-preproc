@@ -54,16 +54,23 @@ input_parc = 'aparc.a2009s+aseg.mgz'
 input_mask = '*space-T1w*brain_mask.nii.gz'
 input_trans = 'sub-*_rec-prenorm_from-fsnative_to-T1w_mode-image_xfm.txt'
 
-if 'linux' in sys.platform:
+dl.get(glob.glob(os.path.join(path_bids, '*.json')), jobs=48)
+dl.get(glob.glob(os.path.join(path_bids, '*', '*', '*.json')), jobs=48)
+dl.get(glob.glob(os.path.join(path_bids, '*', '*', '*', '*.json')), jobs=48)
 
-    dl.get(glob.glob(os.path.join(path_bids, '*.json')), jobs=48)
-    dl.get(glob.glob(os.path.join(path_bids, '*', '*', '*.json')), jobs=48)
-    dl.get(glob.glob(os.path.join(path_bids, '*', '*', '*', '*.json')), jobs=48)
+if 'linux' in sys.platform:
 
     dl.get(glob.glob(os.path.join(path_func, input_func)), jobs=48)
     dl.get(glob.glob(os.path.join(path_parc, input_parc)), jobs=48)
     dl.get(glob.glob(os.path.join(path_func, input_mask)), jobs=48)
     dl.get(glob.glob(os.path.join(path_anat, input_trans)), jobs=48)
+
+else:
+    
+    dl.get(glob.glob(os.path.join(path_fmriprep, 'sub-01', '*', 'func', input_func)), jobs=8)
+    dl.get(glob.glob(os.path.join(path_freesurfer, 'sub-01', 'mri', input_parc)), jobs=8)
+    dl.get(glob.glob(os.path.join(path_fmriprep, 'sub-01', '*', 'func', input_mask)), jobs=8)
+    dl.get(glob.glob(os.path.join(path_fmriprep, 'sub-01', 'anat', input_trans)), jobs=8)   
 
 templates = dict(
         input_func=os.path.join(path_temp_func, input_func),
@@ -85,6 +92,8 @@ module load ants
 
 bids_layout = bids.BIDSLayout(root=path_bids)
 sub_list = ['sub-' + x for x in sorted(bids_layout.get_subjects())]
+if 'darwin' in sys.platform:
+    sub_list = ['sub-01']
 infosource = Node(IdentityInterface(fields=['subject_id']), name='infosource')
 infosource.iterables = [('subject_id', sub_list)]
 
