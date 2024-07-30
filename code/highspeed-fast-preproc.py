@@ -82,7 +82,7 @@ templates = dict(
 job_template = """#!/bin/bash
 #SBATCH --time 5:00:00
 #SBATCH --mail-type NONE
-#SBATCH --workdir {}
+#SBATCH --chdir {}
 #SBATCH --output {}
 source venv/bin/activate
 module load fsl/5.0
