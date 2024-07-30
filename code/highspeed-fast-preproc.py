@@ -90,23 +90,23 @@ module load freesurfer/7.4.1
 module load ants/2.3.5-mpib0
 """.format(path_work, path_logs)
 
-mem_gb = {
-    'selectfiles': 0.1,
-    'susan.inputnode': 0.1,
-    'susan.median': 4,
-    'susan.mask': 4,
-    'susan.meanfunc2': 4,
-    'susan.merge': 4,
-    'susan.multi_inputs': 4,
-    'susan.smooth': 4,
-    'susan.outputnode': 0.1,
-    'mriconvert': 3,
-    'mask_parc': 0.1,
-    'mask_vis': 0.1,
-    'mask_hpc': 0.1,
-    'mask_mot': 0.1,
-    'mask_mtl': 0.1,
-    'datasink': 0.05
+mem_mb = {
+    'selectfiles': 100,
+    'susan.inputnode': 100,
+    'susan.median': 4000,
+    'susan.mask': 4000,
+    'susan.meanfunc2': 4000,
+    'susan.merge': 4000,
+    'susan.multi_inputs': 4000,
+    'susan.smooth': 4000,
+    'susan.outputnode': 100,
+    'mriconvert': 3000,
+    'mask_parc': 100,
+    'mask_vis': 100,
+    'mask_hpc': 100,
+    'mask_mot': 100,
+    'mask_mtl': 100,
+    'datasink': 50
 }
 
 bids_layout = bids.BIDSLayout(root=path_bids)
@@ -120,44 +120,44 @@ infosource.iterables = [('subject_id', sub_list)]
 
 selectfiles = Node(SelectFiles(templates, sort_filelist=True), name='selectfiles')
 selectfiles.interface.num_threads = 1
-selectfiles.interface.mem_gb = mem_gb['selectfiles']
+selectfiles.interface.mem_gb = mem_mb['selectfiles'] / 1000
 selectfiles.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-selectfiles.plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['selectfiles']), 'overwrite': True}
+selectfiles.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['selectfiles']), 'overwrite': True}
 
 susan = create_susan_smooth()
 susan.inputs.inputnode.fwhm = 4
 susan.get_node('inputnode').interface.num_threads = 1
-susan.get_node('inputnode').interface.mem_gb = mem_gb['susan.inputnode']
+susan.get_node('inputnode').interface.mem_gb = mem_mb['susan.inputnode'] / 1000
 susan.get_node('inputnode').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-susan.get_node('inputnode').plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['susan.inputnode']), 'overwrite': True}
+susan.get_node('inputnode').plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['susan.inputnode']), 'overwrite': True}
 susan.get_node('median').interface.num_threads = 1
-susan.get_node('median').interface.mem_gb = mem_gb['susan.inputnode']
+susan.get_node('median').interface.mem_gb = mem_mb['susan.inputnode'] / 1000
 susan.get_node('median').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-susan.get_node('median').plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['susan.median']), 'overwrite': True}
+susan.get_node('median').plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['susan.median']), 'overwrite': True}
 susan.get_node('mask').interface.num_threads = 1
-susan.get_node('mask').interface.mem_gb = mem_gb['susan.mask']
+susan.get_node('mask').interface.mem_gb = mem_mb['susan.mask'] / 1000
 susan.get_node('mask').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-susan.get_node('mask').plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['susan.mask']), 'overwrite': True}
+susan.get_node('mask').plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['susan.mask']), 'overwrite': True}
 susan.get_node('meanfunc2').interface.num_threads = 1
-susan.get_node('meanfunc2').interface.mem_gb = mem_gb['susan.meanfunc2']
+susan.get_node('meanfunc2').interface.mem_gb = mem_mb['susan.meanfunc2'] / 1000
 susan.get_node('meanfunc2').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-susan.get_node('meanfunc2').plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['susan.meanfunc2']), 'overwrite': True}
+susan.get_node('meanfunc2').plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['susan.meanfunc2']), 'overwrite': True}
 susan.get_node('merge').interface.num_threads = 1
-susan.get_node('merge').interface.mem_gb = mem_gb['susan.merge']
+susan.get_node('merge').interface.mem_gb = mem_mb['susan.merge'] / 1000
 susan.get_node('merge').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-susan.get_node('merge').plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['susan.merge']), 'overwrite': True}
+susan.get_node('merge').plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['susan.merge']), 'overwrite': True}
 susan.get_node('multi_inputs').interface.num_threads = 1
-susan.get_node('multi_inputs').interface.mem_gb = mem_gb['susan.multi_inputs']
+susan.get_node('multi_inputs').interface.mem_gb = mem_mb['susan.multi_inputs']
 susan.get_node('multi_inputs').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-susan.get_node('multi_inputs').plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['susan.multi_inputs']), 'overwrite': True}
+susan.get_node('multi_inputs').plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['susan.multi_inputs']), 'overwrite': True}
 susan.get_node('smooth').interface.num_threads = 1
-susan.get_node('smooth').interface.mem_gb = mem_gb['susan.smooth']
+susan.get_node('smooth').interface.mem_gb = mem_mb['susan.smooth'] / 1000
 susan.get_node('smooth').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-susan.get_node('smooth').plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['susan.smooth']), 'overwrite': True}
+susan.get_node('smooth').plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['susan.smooth']), 'overwrite': True}
 susan.get_node('outputnode').interface.num_threads = 1
-susan.get_node('outputnode').interface.mem_gb = mem_gb['susan.outputnode']
+susan.get_node('outputnode').interface.mem_gb = mem_mb['susan.outputnode'] / 1000
 susan.get_node('outputnode').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-susan.get_node('outputnode').plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['susan.outputnode']), 'overwrite': True}
+susan.get_node('outputnode').plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['susan.outputnode']), 'overwrite': True}
 
 mask_labels_vis = [
     1005, 2005,  # cuneus
@@ -185,38 +185,38 @@ mask_labels_mtl = [
 
 mriconvert = Node(MRIConvert(), name='mriconvert')
 mriconvert.inputs.out_type = 'niigz'
-mriconvert.interface.mem_gb = mem_gb['mriconvert']
+mriconvert.interface.mem_gb = mem_mb['mriconvert'] / 1000
 mriconvert.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-mriconvert.plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['mriconvert']), 'overwrite': True}
+mriconvert.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['mriconvert']), 'overwrite': True}
 
 mask_parc = MapNode(interface=ApplyTransforms(), name='mask_parc', iterfield=['reference_image'])
-mriconvert.interface.mem_gb = mem_gb['mask_parc']
+mriconvert.interface.mem_gb = mem_mb['mask_parc'] / 1000
 mask_parc.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-mask_parc.plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['mask_parc']), 'overwrite': True}
+mask_parc.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['mask_parc']), 'overwrite': True}
 
 mask_vis = MapNode(interface=Binarize(), name='mask_vis', iterfield=['in_file'])
 mask_vis.inputs.match = mask_labels_vis
-mask_vis.interface.mem_gb = mem_gb['mask_vis']
+mask_vis.interface.mem_gb = mem_mb['mask_vis'] / 1000
 mask_vis.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-mask_vis.plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['mask_vis']), 'overwrite': True}
+mask_vis.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['mask_vis']), 'overwrite': True}
 
 mask_hpc = MapNode(interface=Binarize(), name='mask_hpc', iterfield=['in_file'])
 mask_hpc.inputs.match = mask_labels_hpc
-mask_hpc.interface.mem_gb = mem_gb['mask_hpc']
+mask_hpc.interface.mem_gb = mem_mb['mask_hpc'] / 1000
 mask_hpc.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-mask_hpc.plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['mask_hpc']), 'overwrite': True}
+mask_hpc.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['mask_hpc']), 'overwrite': True}
 
 mask_mot = MapNode(interface=Binarize(), name='mask_mot', iterfield=['in_file'])
 mask_mot.inputs.match = mask_labels_mot
-mask_mot.interface.mem_gb = mem_gb['mask_mot']
+mask_mot.interface.mem_gb = mem_mb['mask_mot'] / 1000
 mask_mot.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-mask_mot.plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['mask_mot']), 'overwrite': True}
+mask_mot.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['mask_mot']), 'overwrite': True}
 
 mask_mtl = MapNode(interface=Binarize(), name='mask_mtl', iterfield=['in_file'])
 mask_mtl.inputs.match = mask_labels_mtl
-mask_mtl.interface.mem_gb = mem_gb['mask_mtl']
+mask_mtl.interface.mem_gb = mem_mb['mask_mtl'] / 1000
 mask_mtl.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-mask_mtl.plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['mask_mtl']), 'overwrite': True}
+mask_mtl.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['mask_mtl']), 'overwrite': True}
 
 datasink = Node(DataSink(), name='datasink')
 datasink.inputs.base_directory = path_output
@@ -224,9 +224,9 @@ substitutions = [('_subject_id_', '')]
 datasink.inputs.substitutions = substitutions
 datasink.inputs.parameterization = True
 datasink.interface.num_threads = 1
-datasink.interface.mem_gb = mem_gb['datasink']
+datasink.interface.mem_gb = mem_mb['datasink'] / 1000
 datasink.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-datasink.plugin_args = {'sbatch_args': '--mem {}G'.format(mem_gb['datasink']), 'overwrite': True}
+datasink.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['datasink']), 'overwrite': True}
 
 wf = Workflow(name='preproc')
 wf.config = {'execution': {'stop_on_first_crash': True}}
