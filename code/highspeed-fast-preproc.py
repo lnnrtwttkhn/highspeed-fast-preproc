@@ -87,7 +87,7 @@ job_template = """#!/bin/bash
 source venv/bin/activate
 module load fsl/5.0
 module load freesurfer/6.0.0
-module load ants
+module load ants/2.3.5-mpib0
 """.format(path_work, path_logs)
 
 bids_layout = bids.BIDSLayout(root=path_bids)
@@ -106,35 +106,35 @@ selectfiles.plugin_args = {'sbatch_args': '--mem 100MB', 'overwrite': True}
 susan = create_susan_smooth()
 susan.inputs.inputnode.fwhm = 4
 susan.get_node('inputnode').interface.num_threads = 1
-susan.get_node('inputnode').interface.estimated_memory_gb = 0.1
+susan.get_node('inputnode').interface.mem_gb = 0.1
 susan.get_node('inputnode').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
 susan.get_node('inputnode').plugin_args = {'sbatch_args': '--mem 100MB', 'overwrite': True}
 susan.get_node('median').interface.num_threads = 1
-susan.get_node('median').interface.estimated_memory_gb = 2.5
+susan.get_node('median').interface.mem_gb = 2.5
 susan.get_node('median').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
 susan.get_node('median').plugin_args = {'sbatch_args': '--mem 2500MB', 'overwrite': True}
 susan.get_node('mask').interface.num_threads = 1
-susan.get_node('mask').interface.estimated_memory_gb = 1
+susan.get_node('mask').interface.mem_gb = 1
 susan.get_node('mask').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
 susan.get_node('mask').plugin_args = {'sbatch_args': '--mem 1000MB', 'overwrite': True}
 susan.get_node('meanfunc2').interface.num_threads = 1
-susan.get_node('meanfunc2').interface.estimated_memory_gb = 2
+susan.get_node('meanfunc2').interface.mem_gb = 2
 susan.get_node('meanfunc2').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
 susan.get_node('meanfunc2').plugin_args = {'sbatch_args': '--mem 2000MB', 'overwrite': True}
 susan.get_node('merge').interface.num_threads = 1
-susan.get_node('merge').interface.estimated_memory_gb = 3
+susan.get_node('merge').interface.mem_gb = 3
 susan.get_node('merge').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
 susan.get_node('merge').plugin_args = {'sbatch_args': '--mem 3000MB', 'overwrite': True}
 susan.get_node('multi_inputs').interface.num_threads = 1
-susan.get_node('multi_inputs').interface.estimated_memory_gb = 3
+susan.get_node('multi_inputs').interface.mem_gb = 3
 susan.get_node('multi_inputs').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
 susan.get_node('multi_inputs').plugin_args = {'sbatch_args': '--mem 3000MB', 'overwrite': True}
 susan.get_node('smooth').interface.num_threads = 1
-susan.get_node('smooth').interface.estimated_memory_gb = 3
+susan.get_node('smooth').interface.mem_gb = 3
 susan.get_node('smooth').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
 susan.get_node('smooth').plugin_args = {'sbatch_args': '--mem 3000MB', 'overwrite': True}
 susan.get_node('outputnode').interface.num_threads = 1
-susan.get_node('outputnode').interface.estimated_memory_gb = 0.1
+susan.get_node('outputnode').interface.mem_gb = 0.1
 susan.get_node('outputnode').plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
 susan.get_node('outputnode').plugin_args = {'sbatch_args': '--mem 100MB', 'overwrite': True}
 
@@ -197,7 +197,7 @@ substitutions = [('_subject_id_', '')]
 datasink.inputs.substitutions = substitutions
 datasink.inputs.parameterization = True
 datasink.interface.num_threads = 1
-datasink.interface.estimated_memory_gb = 0.05
+datasink.interface.mem_gb = 0.05
 datasink.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
 datasink.plugin_args = {'sbatch_args': '--mem 40MB', 'overwrite': True}
 
