@@ -80,7 +80,7 @@ job_template = """#!/bin/bash
 source venv/bin/activate
 module load fsl/5.0
 module load freesurfer/6.0.0
-module load ants
+module load ants/2.3.5-mpib0
 """.format(path_work, path_logs)
 
 bids_layout = bids.BIDSLayout(root=path_bids)
