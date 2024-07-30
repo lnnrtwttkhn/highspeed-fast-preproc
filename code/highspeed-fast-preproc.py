@@ -85,8 +85,8 @@ job_template = """#!/bin/bash
 #SBATCH --chdir {}
 #SBATCH --output {}
 source venv/bin/activate
-module load fsl/5.0
-module load freesurfer/6.0.0
+module load fsl/6.0.5.1
+module load freesurfer/7.4.1
 module load ants/2.3.5-mpib0
 """.format(path_work, path_logs)
 
