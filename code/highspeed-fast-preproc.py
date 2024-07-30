@@ -94,6 +94,8 @@ bids_layout = bids.BIDSLayout(root=path_bids)
 sub_list = ['sub-' + x for x in sorted(bids_layout.get_subjects())]
 if 'darwin' in sys.platform:
     sub_list = ['sub-01']
+# remove sub-06 (incomplete data):
+sub_list.remove('sub-06')
 infosource = Node(IdentityInterface(fields=['subject_id']), name='infosource')
 infosource.iterables = [('subject_id', sub_list)]
 
