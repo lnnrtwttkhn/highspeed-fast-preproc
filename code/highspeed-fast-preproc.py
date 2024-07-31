@@ -79,16 +79,16 @@ templates = dict(
         input_trans=os.path.join(path_temp_anat, input_trans)
 )
 
-job_template = """#!/bin/bash
+job_template = """#!/bin/bash -l
 #SBATCH --time 5:00:00
 #SBATCH --mail-type NONE
 #SBATCH --chdir {}
 #SBATCH --output {}
-source venv/bin/activate
+source {}/venv/bin/activate
 module load fsl/6.0.5.1
 module load freesurfer/7.4.1
 module load ants/2.3.5-mpib0
-""".format(path_work, path_logs)
+""".format(path_work, path_logs, path_root)
 
 mem_mb = {
     'selectfiles': 100,
