@@ -24,7 +24,7 @@ def find_root(project_name):
 
 now = datetime.now().strftime("%Y%m%d_%H%M%S")
 os.environ['FSLOUTPUTTYPE'] = 'NIFTI_GZ'
-os.environ['SUBJECTS_DIR'] = '/opt/software/freesurfer/6.0.0/subjects'
+os.environ['SUBJECTS_DIR'] = '/opt/software/freesurfer/7.4.1/subjects'
 
 project_name = 'highspeed-fast-preproc'
 path_root = find_root(project_name=project_name)
