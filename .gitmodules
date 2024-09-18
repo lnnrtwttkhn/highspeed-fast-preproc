@@ -3,8 +3,3 @@
 	url = git@github.com:lnnrtwttkhn/highspeed-fast-bids.git
 	datalad-id = 7e6733a2-ae67-11eb-9461-acde48001122
 	datalad-url = git@github.com:lnnrtwttkhn/highspeed-fast-bids.git
-[submodule "inputs/fmriprep"]
-	path = inputs/fmriprep
-	url = git@github.com:lnnrtwttkhn/highspeed-fast-fmriprep.git
-	datalad-id = 4a879f51-8e0d-4dfb-8dc8-8e690a15beb1
-	datalad-url = git@github.com:lnnrtwttkhn/highspeed-fast-fmriprep.git
