@@ -9,8 +9,6 @@ import bids
 import datalad.api as dl
 from nipype.interfaces.utility import IdentityInterface
 from nipype.interfaces.io import SelectFiles, DataSink
-from nipype.interfaces.freesurfer import Binarize, MRIConvert
-from nipype.interfaces.ants import ApplyTransforms
 from nipype.pipeline.engine import Workflow, Node, MapNode
 from niflow.nipype1.workflows.fmri.fsl import create_susan_smooth
 
@@ -26,7 +24,7 @@ def find_root(project_name):
 
 now = datetime.now().strftime("%Y%m%d_%H%M%S")
 os.environ['FSLOUTPUTTYPE'] = 'NIFTI_GZ'
-os.environ['SUBJECTS_DIR'] = '/opt/software/freesurfer/6.0.0/subjects'
+os.environ['SUBJECTS_DIR'] = '/opt/software/freesurfer/7.4.1/subjects'
 
 project_name = 'highspeed-fast-preproc'
 path_root = find_root(project_name=project_name)
@@ -35,12 +33,10 @@ path_bids = os.path.join(path_input, 'bids')
 path_work = os.path.join(path_root, 'work')
 path_logs = os.path.join(path_root, 'logs', now)
 path_fmriprep = os.path.join(path_input, 'fmriprep')
-path_freesurfer = os.path.join(path_input, 'fmriprep', 'sourcedata', 'freesurfer')
 path_func = os.path.join(path_fmriprep, '*', '*', 'func')
 path_parc = os.path.join(path_freesurfer, '*', 'mri')
 path_anat = os.path.join(path_fmriprep, '*', 'anat')
 path_temp_func = os.path.join(path_fmriprep, '{subject_id}', '*', 'func')
-path_temp_freesurfer = os.path.join(path_freesurfer, '{subject_id}', 'mri')
 path_temp_anat = os.path.join(path_fmriprep, '{subject_id}', 'anat')
 path_output = os.path.join(path_root, 'preproc')
 path_graphs = os.path.join(path_output, 'graphs')
@@ -50,9 +46,8 @@ for path in [path_work, path_logs, path_output, path_graphs]:
         os.makedirs(path)
 
 input_func = '*space-T1w*preproc_bold.nii.gz'
-input_parc = 'aparc.a2009s+aseg.mgz'
+input_parc = '*space-T1w*aparcaseg_dseg.nii.gz'
 input_mask = '*space-T1w*brain_mask.nii.gz'
-input_trans = 'sub-*_rec-prenorm_from-fsnative_to-T1w_mode-image_xfm.txt'
 
 dl.get(glob.glob(os.path.join(path_bids, '*.json')), jobs=48)
 dl.get(glob.glob(os.path.join(path_bids, '*', '*', '*.json')), jobs=48)
@@ -63,20 +58,11 @@ if 'linux' in sys.platform:
     dl.get(glob.glob(os.path.join(path_func, input_func)), jobs=48)
     dl.get(glob.glob(os.path.join(path_parc, input_parc)), jobs=48)
     dl.get(glob.glob(os.path.join(path_func, input_mask)), jobs=48)
-    dl.get(glob.glob(os.path.join(path_anat, input_trans)), jobs=48)
-
-else:
-    
-    dl.get(glob.glob(os.path.join(path_fmriprep, 'sub-01', '*', 'func', input_func)), jobs=8)
-    dl.get(glob.glob(os.path.join(path_freesurfer, 'sub-01', 'mri', input_parc)), jobs=8)
-    dl.get(glob.glob(os.path.join(path_fmriprep, 'sub-01', '*', 'func', input_mask)), jobs=8)
-    dl.get(glob.glob(os.path.join(path_fmriprep, 'sub-01', 'anat', input_trans)), jobs=8)   
 
 templates = dict(
         input_func=os.path.join(path_temp_func, input_func),
-        input_parc=os.path.join(path_temp_freesurfer, input_parc),
-        input_mask=os.path.join(path_temp_func, input_mask),
-        input_trans=os.path.join(path_temp_anat, input_trans)
+        input_parc=os.path.join(path_temp_func, input_parc),
+        input_mask=os.path.join(path_temp_func, input_mask)
 )
 
 job_template = """#!/bin/bash -l
@@ -100,8 +86,6 @@ mem_mb = {
     'susan.multi_inputs': 10000,
     'susan.smooth': 5000,
     'susan.outputnode': 100,
-    'mriconvert': 5000,
-    'mask_parc': 1000,
     'mask_vis': 1000,
     'mask_hpc': 1000,
     'mask_mot': 1000,
@@ -183,17 +167,6 @@ mask_labels_mtl = [
     1006, 2006,  # ctx-entorhinal
 ]
 
-mriconvert = Node(MRIConvert(), name='mriconvert')
-mriconvert.inputs.out_type = 'niigz'
-mriconvert.interface.mem_gb = mem_mb['mriconvert'] / 1000
-mriconvert.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-mriconvert.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['mriconvert']), 'overwrite': True}
-
-mask_parc = MapNode(interface=ApplyTransforms(), name='mask_parc', iterfield=['reference_image'])
-mriconvert.interface.mem_gb = mem_mb['mask_parc'] / 1000
-mask_parc.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-mask_parc.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['mask_parc']), 'overwrite': True}
-
 mask_vis = MapNode(interface=Binarize(), name='mask_vis', iterfield=['in_file'])
 mask_vis.inputs.match = mask_labels_vis
 mask_vis.interface.mem_gb = mem_mb['mask_vis'] / 1000
@@ -235,16 +208,10 @@ wf.connect(infosource, 'subject_id', selectfiles, 'subject_id')
 wf.connect(selectfiles, 'input_func', susan, 'inputnode.in_files')
 wf.connect(selectfiles, 'input_mask', susan, 'inputnode.mask_file')
 wf.connect(susan, 'outputnode.smoothed_files', datasink, 'smooth')
-wf.connect(selectfiles, 'input_parc', mriconvert, 'in_file')
-wf.connect(mriconvert, 'out_file', mask_parc, 'input_image')
-wf.connect(selectfiles, 'input_func', mask_parc, 'reference_image')
-wf.connect(selectfiles, 'input_trans', mask_parc, 'transforms')
-wf.connect(mask_parc, 'output_image', mask_vis, 'in_file')
-wf.connect(mask_parc, 'output_image', mask_hpc, 'in_file')
-wf.connect(mask_parc, 'output_image', mask_mot, 'in_file')
-wf.connect(mask_parc, 'output_image', mask_mtl, 'in_file')
-wf.connect(mriconvert, 'out_file', datasink, 'mriconvert')
-wf.connect(mask_parc, 'output_image', datasink, 'mask_parc.@output_image')
+wf.connect(selectfiles, 'input_parc', mask_vis, 'in_file')
+wf.connect(selectfiles, 'input_parc', mask_hpc, 'in_file')
+wf.connect(selectfiles, 'input_parc', mask_mot, 'in_file')
+wf.connect(selectfiles, 'input_parc', mask_mtl, 'in_file')
 wf.connect(mask_vis, 'binary_file', datasink, 'mask_vis.@binary')
 wf.connect(mask_hpc, 'binary_file', datasink, 'mask_hpc.@binary')
 wf.connect(mask_mot, 'binary_file', datasink, 'mask_mot.@binary')
