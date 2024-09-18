@@ -34,7 +34,6 @@ path_work = os.path.join(path_root, 'work')
 path_logs = os.path.join(path_root, 'logs', now)
 path_fmriprep = os.path.join(path_input, 'fmriprep')
 path_func = os.path.join(path_fmriprep, '*', '*', 'func')
-path_parc = os.path.join(path_freesurfer, '*', 'mri')
 path_anat = os.path.join(path_fmriprep, '*', 'anat')
 path_temp_func = os.path.join(path_fmriprep, '{subject_id}', '*', 'func')
 path_temp_anat = os.path.join(path_fmriprep, '{subject_id}', 'anat')
@@ -56,7 +55,7 @@ dl.get(glob.glob(os.path.join(path_bids, '*', '*', '*', '*.json')), jobs=48)
 if 'linux' in sys.platform:
 
     dl.get(glob.glob(os.path.join(path_func, input_func)), jobs=48)
-    dl.get(glob.glob(os.path.join(path_parc, input_parc)), jobs=48)
+    dl.get(glob.glob(os.path.join(path_func, input_parc)), jobs=48)
     dl.get(glob.glob(os.path.join(path_func, input_mask)), jobs=48)
 
 templates = dict(
