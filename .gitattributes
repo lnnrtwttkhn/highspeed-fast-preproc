@@ -3,3 +3,6 @@
 CHANGELOG.md annex.largefiles=nothing
 README.md annex.largefiles=nothing
 .codespellrc annex.largefiles=nothing
+Makefile annex.largefiles=nothing
+requirements.txt annex.largefiles=nothing
+.gitignore annex.largefiles=nothing
