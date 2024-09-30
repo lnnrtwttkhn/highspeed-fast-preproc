@@ -84,7 +84,7 @@ mem_mb = {
     'susan.meanfunc2': 10000,
     'susan.merge': 10000,
     'susan.multi_inputs': 10000,
-    'susan.smooth': 5000,
+    'susan.smooth': 10000,
     'susan.outputnode': 100,
     'mask_vis': 1000,
     'mask_hpc': 1000,
