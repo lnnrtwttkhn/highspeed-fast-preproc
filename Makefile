@@ -10,7 +10,7 @@ REQUIREMENTS_FILE := requirements.txt
 # Define the Python script to run
 PYTHON_SCRIPT := code/highspeed-fast-preproc.py
 
-.PHONY: all create_venv install_deps clean activate save_deps run_script
+.PHONY: all create_venv install_deps clean clean_venv activate save_deps run_script
 
 all: create_venv install_deps
 
@@ -24,7 +24,7 @@ install_deps: create_venv
 	@$(VENV_DIR)/bin/pip install -r $(REQUIREMENTS_FILE)
 	@echo "Dependencies installed."
 
-clean:
+clean_venv:
 	@echo "Removing virtual environment directory..."
 	@rm -rf $(VENV_DIR)
 	@echo "Virtual environment removed."
@@ -51,3 +51,8 @@ run_script: create_venv install_deps
 	@echo "Running $(PYTHON_SCRIPT) inside the virtual environment..."
 	@source $(VENV_DIR)/bin/activate && python $(PYTHON_SCRIPT)
 	@echo "Script executed."
+
+clean:
+	@rm -rf *.pklz
+	@rm -rf work
+	@rm -rf logs
