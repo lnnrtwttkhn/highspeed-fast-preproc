@@ -11,6 +11,7 @@ from nipype.interfaces.utility import IdentityInterface
 from nipype.interfaces.io import SelectFiles, DataSink
 from nipype.pipeline.engine import Workflow, Node, MapNode
 from niflow.nipype1.workflows.fmri.fsl import create_susan_smooth
+from nipype.interfaces.freesurfer import Binarize
 
 
 def find_root(project_name):
