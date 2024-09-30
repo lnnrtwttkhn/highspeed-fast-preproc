@@ -18,7 +18,7 @@ def find_root(project_name):
     path_root = None
     roots = [os.getenv('PWD'), os.getcwd()]
     roots_project = [x for x in roots if project_name in x]
-    roots_home = [x for x in roots_project if os.getenv('HOME') in x]
+    roots_home = [x for x in roots_project if os.getenv('USER') in x]
     path_root = random.choice(roots_home).split(project_name)[0] + project_name
     return path_root
 
