@@ -121,7 +121,7 @@ templates = dict(
         input_parc=os.path.join(path_temp_func, input_parc),
         input_mask=os.path.join(path_temp_func, input_mask),
         input_confounds=os.path.join(path_temp_func, input_confounds),
-        input_confounds=os.path.join(path_temp_events, input_events)
+        input_events=os.path.join(path_temp_events, input_events)
 )
 # ======================================================================
 # DEFINE SLURM CLUSTER JOB TEMPLATE (NEEDED WHEN RUNNING ON THE CLUSTER):
@@ -168,8 +168,6 @@ mem_mb = {
 bids_layout = bids.BIDSLayout(root=path_bids)
 # get all subject ids:
 sub_list = ['sub-' + x for x in sorted(bids_layout.get_subjects())]
-if 'darwin' in sys.platform:
-    sub_list = ['sub-01']
 # remove sub-06 (incomplete data):
 sub_list.remove('sub-06')
 # ======================================================================
