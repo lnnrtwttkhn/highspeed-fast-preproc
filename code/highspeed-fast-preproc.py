@@ -96,8 +96,8 @@ for path in [path_work, path_logs, path_output, path_graphs]:
 input_func = '*space-T1w*preproc_bold.nii.gz'
 input_parc = '*space-T1w*aparcaseg_dseg.nii.gz'
 input_mask = '*space-T1w*brain_mask.nii.gz'
-input_confounds = '*confounds_timeseries.tsv'
-input_events = '*_events.tsv'
+input_confounds = '*task-highspeed*confounds_timeseries.tsv'
+input_events = '*task-highspeed*_events.tsv'
 # ======================================================================
 # GET DATA OF RELEVANT BIDS JSON FILES FOR BIDS LAYOUT:
 # ======================================================================
@@ -370,6 +370,8 @@ def leave_one_out(subject_info, event_names, data_func, run):
 
     # create new list with subject info of all runs except current run:
     subject_info = [info for i, info in enumerate(subject_info) if i != run]
+    # select all data func files that are task data:
+    data_func = [file for file in data_func if 'task-highspeed' in file]
     # create new list with functional data of all runs except current run:
     data_func = [info for i, info in enumerate(data_func) if i != run]
 
