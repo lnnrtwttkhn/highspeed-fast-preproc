@@ -554,8 +554,8 @@ wf.base_dir = os.path.join(path_root, 'work')
 # connect infosource to selectfiles node:
 wf.connect(infosource, 'subject_id', selectfiles, 'subject_id')
 # generate subject specific events and regressors to subject_info:
-wf.connect(selectfiles, 'events', subject_info, 'events')
-wf.connect(selectfiles, 'confounds', subject_info, 'confounds')
+wf.connect(selectfiles, 'input_events', subject_info, 'events')
+wf.connect(selectfiles, 'input_confounds', subject_info, 'confounds')
 # connect functional files to smoothing workflow:
 wf.connect(selectfiles, 'input_func', susan, 'inputnode.in_files')
 wf.connect(selectfiles, 'input_mask', susan, 'inputnode.mask_file')
