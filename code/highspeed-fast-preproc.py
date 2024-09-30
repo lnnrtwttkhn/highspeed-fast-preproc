@@ -558,6 +558,8 @@ wf.connect(selectfiles, 'confounds', subject_info, 'confounds')
 wf.connect(selectfiles, 'input_func', susan, 'inputnode.in_files')
 wf.connect(selectfiles, 'input_mask', susan, 'inputnode.mask_file')
 wf.connect(susan, 'outputnode.smoothed_files', datasink, 'smooth')
+# connect smoothed functional data to the trimming node:
+wf.connect(susan, 'outputnode.smoothed_files', trim, 'in_file')
 # connect parcellated functional files to masking nodes:
 wf.connect(selectfiles, 'input_parc', mask_vis, 'in_file')
 wf.connect(selectfiles, 'input_parc', mask_hpc, 'in_file')
