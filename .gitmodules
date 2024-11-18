@@ -5,7 +5,7 @@
 	datalad-url = git@github.com:lnnrtwttkhn/highspeed-fast-bids.git
 [submodule "inputs/fmriprep"]
 	path = inputs/fmriprep
-	url = git@github.com:lnnrtwttkhn/highspeed-fast-fmriprep.git
+	url = git@gin.g-node.org:/lnnrtwttkhn/highspeed-fast-fmriprep-outputs.git
 	datalad-id = 4a879f51-8e0d-4dfb-8dc8-8e690a15beb1
 	datalad-url = https://gin.g-node.org/lnnrtwttkhn/highspeed-fast-fmriprep-outputs
 [submodule "preproc"]
