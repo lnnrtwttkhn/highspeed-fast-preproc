@@ -18,7 +18,8 @@ from niflow.nipype1.workflows.fmri.fsl import create_susan_smooth
 from nipype.interfaces.freesurfer import Binarize
 from nipype.interfaces.fsl.utils import ExtractROI
 from nipype.algorithms.modelgen import SpecifySPMModel
-from nipype.interfaces.spm.model import Level1Design, EstimateModel, EstimateContrast
+from nipype.interfaces.spm.model import \
+    Level1Design, EstimateModel, EstimateContrast
 from nipype.interfaces.matlab import MatlabCommand
 from nipype.interfaces import spm
 # ======================================================================
@@ -47,6 +48,7 @@ def find_root(project_name):
     roots_home = [x for x in roots_project if os.getenv('USER') in x]
     path_root = random.choice(roots_home).split(project_name)[0] + project_name
     return path_root
+
 
 # ======================================================================
 # SET PATHS AND SUBJECTS
@@ -174,7 +176,7 @@ sub_list.remove('sub-06')
 # DEFINE WORKFLOW PARAMETERS
 # ======================================================================
 # time of repetition, in seconds:
-time_repetition = 1.25
+time_repetition = bids_layout.get_tr()
 # total number of runs:
 num_runs = 8
 # smoothing kernel, in mm:
@@ -186,7 +188,7 @@ num_dummy = 0
 # ======================================================================
 # define the infosource node that collects the data:
 infosource = Node(IdentityInterface(fields=['subject_id']), name='infosource')
-# let the node iterate (paralellize) over all subjects:
+# let the node iterate (parallelize) over all subjects:
 infosource.iterables = [('subject_id', sub_list)]
 # ======================================================================
 # DEFINE SELECTFILES NODE
@@ -422,7 +424,7 @@ l1design.inputs.model_serial_correlations = 'AR(1)'
 # input: number of time-bins per scan in secs (an integer):
 l1design.inputs.microtime_resolution = 16
 # input: the onset/time-bin in seconds for alignment (a float):
-l1design.inputs.microtime_onset = 1
+l1design.inputs.microtime_onset = 8
 # set expected thread and memory usage for the node:
 l1design.interface.num_threads = 1
 l1design.interface.mem_gb = mem_mb['l1design'] / 1000
@@ -481,7 +483,7 @@ mask_vis.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb['mask_vis']), 
 # ======================================================================
 mask_labels_hpc = [
     17, 53,  # left and right hippocampus
-    ]
+]
 mask_hpc = MapNode(interface=Binarize(), name='mask_hpc', iterfield=['in_file'])
 mask_hpc.inputs.match = mask_labels_hpc
 mask_hpc.interface.mem_gb = mem_mb['mask_hpc'] / 1000
