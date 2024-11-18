@@ -56,3 +56,11 @@ clean:
 	@rm -rf *.pklz
 	@rm -rf work
 	@rm -rf logs
+
+.PHONY: save-data
+save-data:
+	datalad save -d preproc -m "Add / update all relevant data" \
+		preproc/mask_*/sub-*/*/*task-highspeed*.nii.gz \
+		preproc/smooth/sub-*/*/*.nii.gz \
+		preproc/contrasts/sub-*/*/SPM.mat \
+		preproc/contrasts/sub-*/*/spmT*.nii
