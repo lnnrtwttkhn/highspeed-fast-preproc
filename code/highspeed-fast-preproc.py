@@ -56,13 +56,12 @@ def find_root(project_name):
 now = datetime.now().strftime("%Y%m%d_%H%M%S")
 project_name = 'highspeed-fast-preproc'
 path_root = find_root(project_name=project_name)
+dataset_root = dl.Dataset(path_root)
 path_input = os.path.join(path_root, 'inputs')
 path_bids = os.path.join(path_input, 'bids')
-dataset_bids = dl.Dataset(path_bids)
 path_work = os.path.join(path_root, 'work')
 path_logs = os.path.join(path_root, 'logs', now)
 path_fmriprep = os.path.join(path_input, 'fmriprep')
-dataset_fmriprep = dl.Dataset(path_fmriprep)
 path_func = os.path.join('*', '*', 'func')
 path_anat = os.path.join('*', 'anat')
 path_events = os.path.join('*', '*', 'func')
@@ -106,18 +105,18 @@ input_events = '*task-highspeed*_events.tsv'
 # ======================================================================
 # GET DATA OF RELEVANT BIDS JSON FILES FOR BIDS LAYOUT:
 # ======================================================================
-dataset_bids.get(glob.glob(os.path.join('*.json')), jobs=48)
-dataset_bids.get(glob.glob(os.path.join('*', '*', '*.json')), jobs=48)
-dataset_bids.get(glob.glob(os.path.join('*', '*', '*', '*.json')), jobs=48)
+dataset_root.get(glob.glob(os.path.join('inputs', 'bids', '*.json')), jobs=48)
+dataset_root.get(glob.glob(os.path.join('inputs', 'bids', '*', '*', '*.json')), jobs=48)
+dataset_root.get(glob.glob(os.path.join('inputs', 'bids', '*', '*', '*', '*.json')), jobs=48)
 # ======================================================================
 # GET DATA (ON LINUX / HPC ENVIRONMENTS ONLY):
 # ======================================================================
 if 'linux' in sys.platform:
-    dataset_fmriprep.get(glob.glob(os.path.join(path_func, input_func)), jobs=48)
-    dataset_fmriprep.get(glob.glob(os.path.join(path_func, input_parc)), jobs=48)
-    dataset_fmriprep.get(glob.glob(os.path.join(path_func, input_mask)), jobs=48)
-    dataset_fmriprep.get(glob.glob(os.path.join(path_func, input_confounds)), jobs=48)
-    dataset_bids.get(glob.glob(os.path.join(path_events, input_events)), jobs=48)
+    dataset_root.get(glob.glob(os.path.join('inputs', 'fmriprep', path_func, input_func)), jobs=48)
+    dataset_root.get(glob.glob(os.path.join('inputs', 'fmriprep', path_func, input_parc)), jobs=48)
+    dataset_root.get(glob.glob(os.path.join('inputs', 'fmriprep', path_func, input_mask)), jobs=48)
+    dataset_root.get(glob.glob(os.path.join('inputs', 'fmriprep', path_func, input_confounds)), jobs=48)
+    dataset_root.get(glob.glob(os.path.join('inputs', 'bids', path_events, input_events)), jobs=48)
 # ======================================================================
 # CREATE FILE TEMPLATES FOR INFOSOURCE NODE:
 # ======================================================================
