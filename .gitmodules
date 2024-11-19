@@ -1,8 +1,3 @@
-[submodule "inputs/bids"]
-	path = inputs/bids
-	url = git@github.com:lnnrtwttkhn/highspeed-fast-bids.git
-	datalad-id = 7e6733a2-ae67-11eb-9461-acde48001122
-	datalad-url = git@github.com:lnnrtwttkhn/highspeed-fast-bids.git
 [submodule "inputs/fmriprep"]
 	path = inputs/fmriprep
 	url = git@gin.g-node.org:/lnnrtwttkhn/highspeed-fast-fmriprep-outputs.git
