@@ -7,3 +7,7 @@
 	path = preproc
 	url = ./preproc
 	datalad-id = d25dba42-259d-4bc3-b94b-bc8652f083de
+[submodule "inputs/bids"]
+	path = inputs/bids
+	url = git@github.com:lnnrtwttkhn/highspeed-fast-bids.git
+	datalad-id = 7e6733a2-ae67-11eb-9461-acde48001122
