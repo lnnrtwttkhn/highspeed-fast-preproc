@@ -67,7 +67,7 @@ path_events = os.path.join(path_bids, '*', '*', 'func')
 path_temp_func = os.path.join(path_fmriprep, '{subject_id}', '*', 'func')
 path_temp_anat = os.path.join(path_fmriprep, '{subject_id}', 'anat')
 path_temp_events = os.path.join(path_bids, '{subject_id}', '*', 'func')
-path_output = os.path.join(path_root, 'preproc')
+path_output = os.path.join(path_root, 'outputs', 'bold2t1w-init')
 path_graphs = os.path.join(path_output, 'graphs')
 # ======================================================================
 # SET PATH RELATED TO MATLAB AND SPM
