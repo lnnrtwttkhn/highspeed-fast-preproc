@@ -59,8 +59,8 @@ clean:
 
 .PHONY: save-data
 save-data:
-	datalad save -d preproc -m "Add / update all relevant data" \
-		preproc/mask_*/sub-*/*/*task-highspeed*.nii.gz \
-		preproc/smooth/sub-*/*/*.nii.gz \
-		preproc/contrasts/sub-*/*/SPM.mat \
-		preproc/contrasts/sub-*/*/spmT*.nii
+	datalad save -d outputs -m "Add / update all relevant data" \
+		outputs/*/mask_*/sub-*/*/*task-highspeed*.nii.gz \
+		outputs/*/smooth/sub-*/*/*.nii.gz \
+		outputs/*/contrasts/sub-*/*/SPM.mat \
+		outputs/*/contrasts/sub-*/*/spmT*.nii
