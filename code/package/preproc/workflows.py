@@ -93,6 +93,7 @@ def workflow_l1analysis(cfg, events_id, leave_out):
     plot_tmap_mask = nodes.node_plot_tmap_mask(cfg)
     tmap_mask_thresh = nodes.node_tmap_mask_thresh(cfg)
     plot_tmap_raw = nodes.node_plot_roi(cfg, name='tmap_mask_thresh')
+    tmap_mask_thresh_bin = nodes.node_tmap_mask_thresh_bin(cfg)
     datasink = nodes.node_datasink(cfg)
     # define workflow:
     wf = Workflow(name='l1analysis_{}_{}'.format(events_id, leave_out))
@@ -113,6 +114,7 @@ def workflow_l1analysis(cfg, events_id, leave_out):
     wf.connect(l1contrasts, 'spmT_images', tmap_mask, 'tmap')
     wf.connect(tmap_mask, 'out_path', plot_tmap_mask, 'roi_file')
     wf.connect(tmap_mask, 'out_path', tmap_mask_thresh, 'img')
+    wf.connect(tmap_mask_thresh, 'out_path', tmap_mask_thresh_bin, 'img')
     # connect to datasink:
     wf.connect(l1estimate, 'beta_images', datasink, '{}.estimates.@beta_images'.format(wf.name))
     wf.connect(l1estimate, 'residual_image', datasink, '{}.estimates.@residual_image'.format(wf.name))
@@ -122,6 +124,7 @@ def workflow_l1analysis(cfg, events_id, leave_out):
     wf.connect(plot_contrasts, 'out_path', datasink, '{}.contrasts.@out_path'.format(wf.name))
     wf.connect(plot_tmap_raw, 'out_path', datasink, '{}.tmap_raw.@out_path'.format(wf.name))
     wf.connect(tmap_mask, 'out_path', datasink, '{}.tmap_mask.@out_path'.format(wf.name))
+    wf.connect(tmap_mask_thresh_bin, 'out_path', datasink, '{}.tmap_mask_thresh_bin.@out_path'.format(wf.name))
     wf.connect(thresh, 'thresholded_map', datasink, '{}.thresh.@threshhold_map'.format(wf.name))
     wf.connect(thresh, 'pre_topo_fdr_map', datasink, '{}.thresh.@pre_topo_fdr_map'.format(wf.name))
     return wf
