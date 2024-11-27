@@ -340,6 +340,7 @@ def get_paths(cfg):
     paths_output['work'] = os.path.join(paths['outputs'], 'work')
     paths_output['datasink'] = os.path.join(paths['outputs'], 'l1pipeline')
     paths_output['figures'] = os.path.join(paths['outputs'], 'figures')
+    paths_output['masks'] = os.path.join(paths['outputs'], 'masks')
     paths_output['maskaverage'] = os.path.join(paths_output['work'], 'maskaverage')
     paths_output['graphs'] = os.path.join(paths['outputs'], 'graphs')
     paths_output['config'] = os.path.join(paths['outputs'], 'config')

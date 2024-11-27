@@ -61,6 +61,26 @@ def node_plot_tmap_raw(cfg):
     return plot_tmap_raw
 
 
+def node_tmap_mask(cfg):
+    from preproc.masks import get_tmap_mask
+    tmap_mask = MapNode(Function(
+        input_names=['tmap', 'mask', 'path_output'],
+        output_names=['out_path'],
+        function=get_tmap_mask,
+    ),
+        name='',
+        iterfield=['tmap', 'mask']
+    )
+    tmap_mask.path_output = cfg['paths']['output']['masks']
+    # set expected thread and memory usage for the node:
+    tmap_mask.interface.num_threads = 1
+    mem_mb = 0.2
+    tmap_mask.interface.mem_gb = mem_mb / 1000
+    tmap_mask.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
+    tmap_mask.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb), 'overwrite': True}
+    return tmap_mask
+
+
 def node_subjectinfo(cfg):
     from preproc.functions import get_subjectinfo
     from nipype.interfaces.utility import Function
