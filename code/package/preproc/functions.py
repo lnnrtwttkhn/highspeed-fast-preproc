@@ -340,11 +340,11 @@ def get_paths(cfg):
     paths_output['config'] = os.path.join(paths['outputs'], 'config')
     # define input files:
     file_anat = os.path.join('anat', '*preproc_T1w.nii.gz')
-    file_func = os.path.join('ses-*', 'func', '*space-T1w*preproc_bold.nii.gz')
+    file_func = os.path.join('ses-*', 'func', '*task-highspeed*space-T1w*preproc_bold.nii.gz')
     file_parc = os.path.join('ses-*', 'func', '*space-T1w*aparcaseg_dseg.nii.gz')
     file_mask = os.path.join('ses-*', 'func', '*space-T1w*brain_mask.nii.gz')
-    file_events = os.path.join('ses-*', 'func', '*events.tsv')
-    file_confounds = os.path.join('ses-*', 'func', '*confounds_timeseries.tsv')
+    file_events = os.path.join('ses-*', 'func', '*task-highspeed*events.tsv')
+    file_confounds = os.path.join('ses-*', 'func', '*task-highspeed*confounds_timeseries.tsv')
     # define templates paths:
     templates = dict()
     templates['anat'] = os.path.join(path_root, paths['fmriprep'], '{subject_id}', file_anat)
