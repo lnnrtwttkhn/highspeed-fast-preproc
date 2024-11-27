@@ -60,6 +60,7 @@ def workflow_main(cfg):
         wf_main.connect(selectfiles, 'anat', wf, 'plot_contrasts.anat')
         wf_main.connect(selectfiles, 'anat', wf, 'plot_raw_tmap.bg_img')
         wf_main.connect(mask_vis, 'binary', wf, 'tmap_mask.mask')
+        wf_main.connect(selectfiles, 'anat', wf, 'plot_tmap_mask.bg_img')
     #    #maskaverage = nodes.node_mask_average(cfg)
         #l1pipeline.connect(selectfiles, 'mask_hpc', maskaverage, 'input_list')
         #l1pipeline.connect(maskaverage, 'out_path', l1analysis, 'l1design.mask_image')
@@ -119,6 +120,7 @@ def workflow_l1analysis(cfg, events_id, leave_out):
     wf.connect(l1contrasts, 'spmT_images', plot_contrasts, 'stat_map')
     wf.connect(l1contrasts, 'spmT_images', plot_tmap_raw, 'roi_img')
     wf.connect(l1contrasts, 'spmT_images', tmap_mask, 'tmap')
+    wf.connect(tmap_mask, 'out_path', plot_tmap_mask, 'roi_file')
     # connect to datasink:
     wf.connect(l1estimate, 'beta_images', datasink, '{}.estimates.@beta_images'.format(wf.name))
     wf.connect(l1estimate, 'residual_image', datasink, '{}.estimates.@residual_image'.format(wf.name))

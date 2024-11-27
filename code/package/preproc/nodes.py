@@ -61,6 +61,28 @@ def node_plot_tmap_raw(cfg):
     return plot_tmap_raw
 
 
+def node_plot_tmap_mask(cfg):
+    from preproc.plotting import plot_roi
+    name = 'plot_tmap_mask'
+    mem_mb = 1000
+    plot_tmap_mask = MapNode(Function(
+        input_names=['roi_img', 'bg_img', 'name', 'path_figures'],
+        output_names=['out_path'],
+        function=plot_roi,
+    ),
+        name=name,
+        iterfield=['roi_img']
+    )
+    plot_tmap_mask.name = name
+    plot_tmap_mask.path_figures = cfg['paths']['output']['figures']
+    # set expected thread and memory usage for the node:
+    plot_tmap_mask.interface.num_threads = 1
+    plot_tmap_mask.interface.mem_gb = mem_mb / 1000
+    plot_tmap_mask.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
+    plot_tmap_mask.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb), 'overwrite': True}
+    return plot_tmap_mask
+
+
 def node_tmap_mask(cfg):
     from preproc.masks import get_tmap_mask
     tmap_mask = MapNode(Function(
