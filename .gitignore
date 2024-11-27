@@ -4,3 +4,4 @@ pyscript.m
 /outputs/
 *.pklz
 *.egg*
+__pycache__
