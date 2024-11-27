@@ -124,6 +124,7 @@ def workflow_l1analysis(cfg, events_id, leave_out):
     wf.connect(plot_contrasts, 'out_path', datasink, '{}.contrasts.@out_path'.format(wf.name))
     wf.connect(plot_tmap_raw, 'out_path', datasink, '{}.tmap_raw.@out_path'.format(wf.name))
     wf.connect(tmap_mask, 'out_path', datasink, '{}.tmap_mask.@out_path'.format(wf.name))
+    wf.connect(tmap_mask_thresh, 'out_path', datasink, '{}.tmap_mask_tresh.@out_path'.format(wf.name))
     wf.connect(tmap_mask_thresh_bin, 'out_path', datasink, '{}.tmap_mask_thresh_bin.@out_path'.format(wf.name))
     wf.connect(thresh, 'thresholded_map', datasink, '{}.thresh.@threshhold_map'.format(wf.name))
     wf.connect(thresh, 'pre_topo_fdr_map', datasink, '{}.thresh.@pre_topo_fdr_map'.format(wf.name))
