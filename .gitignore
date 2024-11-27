@@ -2,3 +2,5 @@
 /work/
 pyscript.m
 /outputs/
+*.pklz
+*.egg*

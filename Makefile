@@ -64,3 +64,7 @@ save-data:
 		outputs/*/smooth/sub-*/*/*.nii.gz \
 		outputs/*/contrasts/sub-*/*/SPM.mat \
 		outputs/*/contrasts/sub-*/*/spmT*.nii
+
+.PHONY: package
+package:
+	@$(VENV_DIR)/bin/pip install -e code/package

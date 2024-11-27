@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='preproc',
-      version='latest',
+      version='0.1',
       description='Highspeed Fast Preprocessing Package',
       url='https://github.com/lnnrtwttkhn/highspeed-fast-preproc/',
       author='Lennart Wittkuhn',
