@@ -58,7 +58,7 @@ def workflow_main(cfg):
         wf_main.connect(selectfiles, 'confounds', wf, 'subjectinfo.confounds')
         wf_main.connect(trim, 'roi_file', wf, 'leaveoneout.data_func')
         wf_main.connect(selectfiles, 'anat', wf, 'plot_contrasts.anat')
-        wf_main.connect(selectfiles, 'anat', wf, 'plot_raw_tmap.bg_img')
+        wf_main.connect(selectfiles, 'anat', wf, 'plot_tmap_raw.bg_img')
         wf_main.connect(mask_vis, 'binary', wf, 'tmap_mask.mask')
         wf_main.connect(selectfiles, 'anat', wf, 'plot_tmap_mask.bg_img')
     #    #maskaverage = nodes.node_mask_average(cfg)
@@ -76,18 +76,6 @@ def workflow_main(cfg):
     return wf_main
 
 
-def workflow_masks(cfg):
-    from preproc import nodes
-    from nipype.pipeline.engine import Workflow
-    # define nodes:
-
-    datasink = nodes.node_datasink(cfg)
-    # define workflow:
-    wf = Workflow(name='masks')
-
-    return wf
-
-
 def workflow_l1analysis(cfg, events_id, leave_out):
     from preproc import nodes
     from nipype.pipeline.engine import Workflow
@@ -102,6 +90,7 @@ def workflow_l1analysis(cfg, events_id, leave_out):
     plot_contrasts = nodes.node_plotcontrasts(cfg)
     plot_tmap_raw = nodes.node_plot_tmap_raw(cfg)
     tmap_mask = nodes.node_tmap_mask(cfg)
+    plot_tmap_mask = nodes.node_plot_tmap_mask(cfg)
     datasink = nodes.node_datasink(cfg)
     # define workflow:
     wf = Workflow(name='l1analysis_{}_{}'.format(events_id, leave_out))

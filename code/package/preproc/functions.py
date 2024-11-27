@@ -83,10 +83,6 @@ def config():
             ],
             'mem_mb': 1000,
         },
-        'plot_tmap_raw': {
-            'name': 'tmap_raw',
-            'mem_mb': 1000,
-        },
         'subjectinfo': {
             'events_spec': {
                 'correct_rejection': {

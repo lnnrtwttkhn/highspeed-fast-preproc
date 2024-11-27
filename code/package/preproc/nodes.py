@@ -43,21 +43,23 @@ def node_binarize(cfg):
 
 def node_plot_tmap_raw(cfg):
     from preproc.plotting import plot_roi
+    name = 'plot_tmap_raw'
+    mem_mb = 1000
     plot_tmap_raw = MapNode(Function(
         input_names=['roi_img', 'bg_img', 'name', 'path_figures'],
         output_names=['out_path'],
         function=plot_roi,
     ),
-        name=cfg['plot_tmap_raw']['name'],
+        name=name,
         iterfield=['roi_img']
     )
-    plot_tmap_raw.name = cfg['plot_tmap_raw']['name']
+    plot_tmap_raw.name = name
     plot_tmap_raw.path_figures = cfg['paths']['output']['figures']
     # set expected thread and memory usage for the node:
     plot_tmap_raw.interface.num_threads = 1
-    plot_tmap_raw.interface.mem_gb = cfg['plot_tmap_raw']['mem_mb'] / 1000
+    plot_tmap_raw.interface.mem_gb = mem_mb / 1000
     plot_tmap_raw.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-    plot_tmap_raw.plugin_args = {'sbatch_args': '--mem {}MB'.format(cfg['plot_tmap_raw']['mem_mb']), 'overwrite': True}
+    plot_tmap_raw.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb), 'overwrite': True}
     return plot_tmap_raw
 
 
