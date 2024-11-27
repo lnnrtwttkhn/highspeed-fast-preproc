@@ -599,7 +599,7 @@ def plot_stat_maps(anat, stat_map, thresh):
     return out_path
 
 
-def leave_one_out(subject_info, event_names, data_func, run=None):
+def leave_one_out(subject_info, event_names, data_func, interest, run=None):
 
     if run:
         # create new list with event_names of all runs except current run:
@@ -617,8 +617,7 @@ def leave_one_out(subject_info, event_names, data_func, run=None):
     max_events = event_names[num_events.index(max(num_events))]
 
     # create list of contrasts:
-    stim = 'correct_rejection'
-    contrast1 = (stim, 'T', max_events, [1 if stim in s else 0 for s in max_events])
+    contrast1 = (interest, 'T', max_events, [1 if interest in s else 0 for s in max_events])
     contrasts = [contrast1]
 
     # return the new lists

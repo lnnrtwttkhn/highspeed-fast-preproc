@@ -22,7 +22,7 @@ def workflow_main(cfg):
         'execution': {'stop_on_first_crash': True, 'hash_method': 'timestamp'},
         'logging': {'interface_level': 'INFO', 'workflow_level': 'INFO'}
     }
-    regressor_of_interest = ['stimulus']
+    regressor_of_interest = ['correct_rejection']
     strategy = ['all', 'crossvalidate']
     wf_subs = []
     for x in regressor_of_interest:
