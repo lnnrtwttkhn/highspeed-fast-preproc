@@ -105,6 +105,29 @@ def node_tmap_mask(cfg):
     return tmap_mask
 
 
+def node_tmap_mask_thresh(cfg):
+    from preproc.masks import get_tmap_mask_thresh
+    name = 'tmap_mask_thresh'
+    mem_mb = 2000
+    tmap_mask_tresh = MapNode(Function(
+        input_names=['img', 'threshold', 'path_output'],
+        output_names=['out_path'],
+        function=get_tmap_mask_thresh,
+    ),
+        name=name,
+        iterfield=['img']
+    )
+    tmap_mask_tresh.inputs.path_output = cfg['paths']['output']['masks']
+    # define the threshold as an iterable:
+    tmap_mask_tresh.iterables = ('treshhold', [1, 2, 3, 4])
+    # set expected thread and memory usage for the node:
+    tmap_mask_tresh.interface.num_threads = 1
+    tmap_mask_tresh.interface.mem_gb = mem_mb / 1000
+    tmap_mask_tresh.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
+    tmap_mask_tresh.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb), 'overwrite': True}
+    return tmap_mask_tresh
+
+
 def node_subjectinfo(cfg):
     from preproc.functions import get_subjectinfo
     from nipype.interfaces.utility import Function

@@ -91,6 +91,7 @@ def workflow_l1analysis(cfg, events_id, leave_out):
     plot_tmap_raw = nodes.node_plot_tmap_raw(cfg)
     tmap_mask = nodes.node_tmap_mask(cfg)
     plot_tmap_mask = nodes.node_plot_tmap_mask(cfg)
+    tmap_mask_thresh = nodes.node_tmap_mask_thresh(cfg)
     datasink = nodes.node_datasink(cfg)
     # define workflow:
     wf = Workflow(name='l1analysis_{}_{}'.format(events_id, leave_out))
@@ -110,6 +111,7 @@ def workflow_l1analysis(cfg, events_id, leave_out):
     wf.connect(l1contrasts, 'spmT_images', plot_tmap_raw, 'roi_img')
     wf.connect(l1contrasts, 'spmT_images', tmap_mask, 'tmap')
     wf.connect(tmap_mask, 'out_path', plot_tmap_mask, 'roi_file')
+    wf.connect(tmap_mask, 'out_path', tmap_mask_thresh, 'img')
     # connect to datasink:
     wf.connect(l1estimate, 'beta_images', datasink, '{}.estimates.@beta_images'.format(wf.name))
     wf.connect(l1estimate, 'residual_image', datasink, '{}.estimates.@residual_image'.format(wf.name))

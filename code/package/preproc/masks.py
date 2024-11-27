@@ -20,3 +20,16 @@ def get_tmap_mask(tmap, mask, path_output):
     tmap_data_masked_img.to_filename(out_path)
     return out_path
 
+
+def get_tmap_mask_thresh(img, threshold, path_output):
+    import os
+    from nilearn import image
+    from preproc.functions import create_filename
+    # save output:
+    filename = create_filename(img, 'thresh', 'nii.gz')
+    out_path = os.path.join(path_output, filename)
+    # threshold the masked tmap image:
+    tmap_img = image.load_img(img)
+    tmaps_masked_thresh_img = image.threshold_img(img=tmap_img, threshold=threshold)
+    tmaps_masked_thresh_img.to_filename(out_path)
+    return out_path
