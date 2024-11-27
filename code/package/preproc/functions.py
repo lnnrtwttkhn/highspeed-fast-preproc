@@ -113,7 +113,7 @@ def config():
                 'a_comp_cor',
                 'framewise_displacement',
             ],
-            'mem_mb': 100,
+            'mem_mb': 150,
         },
         'susan': {
             # name of workflow (default: susan_smooth)
@@ -127,7 +127,7 @@ def config():
             'meanfunc2.mem_mb': 10000,
             'merge.mem_mb': 10000,
             'multi_inputs.mem_mb': 10000,
-            'smooth.mem_mb': 10000,
+            'smooth.mem_mb': 12000,
             'outputnode.mem_mb': 100,
         },
         'l1model': {
