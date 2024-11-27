@@ -49,10 +49,10 @@ def workflow_main(cfg):
         #l1pipeline.connect(maskaverage, 'out_path', l1analysis, 'l1design.mask_image')
     # add masksing workflow
     wf_masks = workflow_masks(cfg)
-    wf_main.connect(selectfiles, 'input_parc', wf_masks, 'mask_vis.in_file')
-    wf_main.connect(selectfiles, 'input_parc', wf_masks, 'mask_hpc.in_file')
-    wf_main.connect(selectfiles, 'input_parc', wf_masks, 'mask_mot.in_file')
-    wf_main.connect(selectfiles, 'input_parc', wf_masks, 'mask_mtl.in_file')
+    wf_main.connect(selectfiles, 'parc', wf_masks, 'mask_vis.in_file')
+    wf_main.connect(selectfiles, 'parc', wf_masks, 'mask_hpc.in_file')
+    wf_main.connect(selectfiles, 'parc', wf_masks, 'mask_mot.in_file')
+    wf_main.connect(selectfiles, 'parc', wf_masks, 'mask_mtl.in_file')
     # execute / test nodes when running in interactive mode:
     #if cfg['code_execution'] == 'interactive':
     #    selectfiles.inputs.subject_id = 'sub-01'
