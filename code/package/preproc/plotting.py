@@ -2,7 +2,7 @@
 # # -*- coding: utf-8 -*-
 
 
-def plot_roi(roi_img, bg_img, name, path_figures):
+def get_plot_roi(roi_img, bg_img, name, path_figures):
     import os
     from preproc.functions import create_filename
     filename = create_filename(roi_img, name, '.png')

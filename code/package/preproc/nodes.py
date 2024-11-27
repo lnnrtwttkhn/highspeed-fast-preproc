@@ -63,26 +63,25 @@ def node_plot_tmap_raw(cfg):
     return plot_tmap_raw
 
 
-def node_plot_tmap_mask(cfg):
-    from preproc.plotting import plot_roi
-    name = 'plot_tmap_mask'
+def node_plot_roi(cfg, name):
+    from preproc.plotting import get_plot_roi
     mem_mb = 1000
-    plot_tmap_mask = MapNode(Function(
+    plot_roi = MapNode(Function(
         input_names=['roi_img', 'bg_img', 'name', 'path_figures'],
         output_names=['out_path'],
-        function=plot_roi,
+        function=get_plot_roi,
     ),
-        name=name,
+        name='plot_roi_' + name,
         iterfield=['roi_img']
     )
-    plot_tmap_mask.name = name
-    plot_tmap_mask.path_figures = cfg['paths']['output']['figures']
+    plot_roi.inputs.name = name
+    plot_roi.inputs.path_figures = cfg['paths']['output']['figures']
     # set expected thread and memory usage for the node:
-    plot_tmap_mask.interface.num_threads = 1
-    plot_tmap_mask.interface.mem_gb = mem_mb / 1000
-    plot_tmap_mask.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-    plot_tmap_mask.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb), 'overwrite': True}
-    return plot_tmap_mask
+    plot_roi.interface.num_threads = 1
+    plot_roi.interface.mem_gb = mem_mb / 1000
+    plot_roi.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
+    plot_roi.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb), 'overwrite': True}
+    return plot_roi
 
 
 def node_tmap_mask(cfg):

@@ -88,10 +88,11 @@ def workflow_l1analysis(cfg, events_id, leave_out):
     l1contrasts = nodes.node_l1contrasts(cfg)
     thresh = nodes.node_thresh(cfg)
     plot_contrasts = nodes.node_plotcontrasts(cfg)
-    plot_tmap_raw = nodes.node_plot_tmap_raw(cfg)
+    plot_tmap_raw = nodes.node_plot_roi(cfg, name='tmap_mask')
     tmap_mask = nodes.node_tmap_mask(cfg)
     plot_tmap_mask = nodes.node_plot_tmap_mask(cfg)
     tmap_mask_thresh = nodes.node_tmap_mask_thresh(cfg)
+    plot_tmap_raw = nodes.node_plot_roi(cfg, name='tmap_mask_thresh')
     datasink = nodes.node_datasink(cfg)
     # define workflow:
     wf = Workflow(name='l1analysis_{}_{}'.format(events_id, leave_out))
