@@ -83,6 +83,10 @@ def config():
             ],
             'mem_mb': 1000,
         },
+        'plot_tmap_raw': {
+            'name': 'tmap_raw',
+            'mem_mb': 1000,
+        },
         'subjectinfo': {
             'events_spec': {
                 'correct_rejection': {
@@ -335,6 +339,7 @@ def get_paths(cfg):
     paths_output['logs'] = os.path.join(paths['outputs'], 'logs', now)
     paths_output['work'] = os.path.join(paths['outputs'], 'work')
     paths_output['datasink'] = os.path.join(paths['outputs'], 'l1pipeline')
+    paths_output['figures'] = os.path.join(paths['outputs'], 'figures')
     paths_output['maskaverage'] = os.path.join(paths_output['work'], 'maskaverage')
     paths_output['graphs'] = os.path.join(paths['outputs'], 'graphs')
     paths_output['config'] = os.path.join(paths['outputs'], 'config')
@@ -514,6 +519,39 @@ def get_confounds(confounds, confounds_spec):
     return regressors, regressor_names
 
 
+def create_filename(file_path, text_to_append, new_extension=None):
+    """
+    Appends text before the first dot in the filename and optionally changes the extension.
+
+    Parameters:
+        file_path (str): The full path of the file.
+        text_to_append (str): The text to append before the first dot.
+        new_extension (str, optional): The new extension to use (e.g., ".jpg"). If None, retains the original extension.
+
+    Returns:
+        str: The new file path with the appended text and optionally a new extension.
+    """
+    # Extract directory and filename
+    directory, filename = os.path.split(file_path)
+
+    # Find the position of the first dot
+    dot_index = filename.find(".")
+
+    if dot_index != -1:
+        # Insert text before the first dot
+        name_part = filename[:dot_index]
+        extension_part = filename[dot_index:] if not new_extension else new_extension
+        new_filename = f"{name_part}_{text_to_append}{extension_part}"
+    else:
+        # No dot in filename, just append the text and handle the new extension
+        name_part = filename
+        extension_part = new_extension if new_extension else ''
+        new_filename = f"{name_part}_{text_to_append}{extension_part}"
+
+    # Return the new full path
+    return new_filename
+
+
 def get_events(events, events_spec):
     import pandas as pd
     import copy
@@ -622,3 +660,7 @@ def leave_one_out(subject_info, event_names, data_func, interest, run=None):
 
     # return the new lists
     return subject_info, data_func, contrasts
+
+
+
+
