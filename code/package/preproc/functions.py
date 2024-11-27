@@ -85,17 +85,32 @@ def config():
         },
         'subjectinfo': {
             'events_spec': {
-                'stimulus': {
-                    'correct_rejection': {'target': 0, 'key_down': 0},
-                    'hit': {'target': 1, 'key_down': 1},
-                    'false_alarm': {'target': 0, 'key_down': 1},
-                    'miss': {'target': 1, 'key_down': 0},
+                'correct_rejection': {
+                    'condition': 'oddball',
+                    'target': 0,
+                    'key_down': 0,
+                },
+                'hit': {
+                    'condition': 'oddball',
+                    'target': 1,
+                    'key_down': 1,
+                },
+                'false_alarm': {
+                    'condition': 'oddball',
+                    'target': 0,
+                    'key_down': 1,
+                },
+                'miss': {
+                    'condition': 'oddball',
+                    'target': 1,
+                    'key_down': 0,
                 },
             },
             # define confounds to include as regressors:
             'confounds_spec': [
                 'trans',
                 'rot',
+                'a_comp_cor',
                 'framewise_displacement',
             ],
             'mem_mb': 100,
@@ -488,81 +503,79 @@ def replace_nan(regressor_values):
     return list(regressor_values)
 
 
-def get_subjectinfo(events, confounds):
-    """
-    FUNCTION TO GET THE SUBJECT-SPECIFIC INFORMATION
-    :param events: list with paths to events files
-    :param confounds: list with paths to confounds files
-    :return: Bunch object with event onsets, durations and regressors
-    """
-
-    # import libraries (needs to be done in the function):
+def get_confounds(confounds, confounds_spec):
     import pandas as pd
-    from nipype.interfaces.base import Bunch
-
-    # event types we consider:
-    event_spec = {
-        'correct_rejection': {'target': 0, 'key_down': 0},
-        'hit': {'target': 1, 'key_down': 1},
-        'false_alarm': {'target': 0, 'key_down': 1},
-        'miss': {'target': 1, 'key_down': 0},
-    }
-
-    #event_names = ['correct_rejection']
-
-    # read the events and confounds files of the current run:
-    #events = selectfiles_results.outputs.events[0]
-    #confounds = selectfiles_results.outputs.confounds[0]
-    run_events = pd.read_csv(events, sep="\t")
+    # read the confounds file of the current run:
     run_confounds = pd.read_csv(confounds, sep="\t")
-
-    # define confounds to include as regressors:
-    confounds = ['trans', 'rot', 'a_comp_cor', 'framewise_displacement']
-
     # search for confounds of interest in the confounds data frame:
-    regressor_names = [col for col in run_confounds.columns if
-                       any([conf in col for conf in confounds])]
-
-    def replace_nan(regressor_values):
-        # calculate the mean value of the regressor:
-        mean_value = regressor_values.mean(skipna=True)
-        # replace all values containing nan with the mean value:
-        regressor_values[regressor_values.isnull()] = mean_value
-        # return list of the regressor values:
-        return list(regressor_values)
-
-    # create a nested list with regressor values
+    regressor_names = [col for col in run_confounds.columns if any([conf in col for conf in confounds_spec])]
+    # create a nested list with regressor values:
     regressors = [replace_nan(run_confounds[conf]) for conf in regressor_names]
+    return regressors, regressor_names
+
+
+def get_events(events, events_spec):
+    import pandas as pd
+    import copy
+
+    # read the events files of the current run:
+    run_events = pd.read_csv(events, sep="\t")
 
     onsets = []
     durations = []
     event_names = []
 
-    for event in event_spec:
+    for event in events_spec:
+        events_selected = copy.deepcopy(run_events)
 
-        onset_list = list(
-            run_events['onset']
-            [(run_events['condition'] == 'oddball') &
-             (run_events['target'] == event_spec[event]['target']) &
-             (run_events['key_down'] == event_spec[event]['key_down'])])
+        # select events based on critera specified in the events_spec:
+        for key, value in events_spec[event].items():
+            events_selected = events_selected.loc[events_selected[key] == value]
 
-        duration_list = list(
-            run_events['duration']
-            [(run_events['condition'] == 'oddball') &
-             (run_events['target'] == event_spec[event]['target']) &
-             (run_events['key_down'] == event_spec[event]['key_down'])])
+        # get onsets and durations of selected events as list:
+        onset_list = events_selected['onset'].tolist()
+        duration_list = events_selected['duration'].tolist()
 
+        # only add to the onsets and durations list if event exists:
         if (onset_list != []) & (duration_list != []):
             event_names.append(event)
             onsets.append(onset_list)
             durations.append(duration_list)
+
+    assert len(onsets) == len(durations) == len(event_names)
+
+    return onsets, durations, event_names
+
+
+def get_subjectinfo(events, confounds, cfg):
+
+    # import libraries (needs to be done in the function):
+    import copy
+    from preproc.functions import get_events, get_confounds
+    from nipype.interfaces.base import Bunch
+
+    # check inputs:
+    assert isinstance(cfg, dict), 'cfg is not a dict!'
+    # get the specification of events and confounds:
+    events_spec = copy.deepcopy(cfg['subjectinfo']['events_spec'])
+    confounds_spec = copy.deepcopy(cfg['subjectinfo']['confounds_spec'])
+    assert isinstance(events_spec, dict), 'events_spec is not a dict!'
+    assert isinstance(confounds_spec, list), 'confounds_spec is not a list!'
+
+    if cfg['code_execution'] == 'interactive':
+        # load example data in interactive code execution mode:
+        events = cfg['paths']['input']['events'][0]
+        confounds = cfg['paths']['input']['confounds'][0]
+
+    regressors, regressor_names = get_confounds(confounds, confounds_spec)
+    onsets, durations, event_names = get_events(events, events_spec)
 
     # create a bunch for each run:
     subject_info = Bunch(
         conditions=event_names, onsets=onsets, durations=durations,
         regressor_names=regressor_names, regressors=regressors)
 
-    return subject_info, sorted(event_names)
+    return subject_info, event_names
 
 
 def plot_stat_maps(anat, stat_map, thresh):
@@ -586,24 +599,27 @@ def plot_stat_maps(anat, stat_map, thresh):
     return out_path
 
 
-def leave_one_out(subject_info, event_names, data_func, run):
+def leave_one_out(subject_info, event_names, data_func, run=None):
 
-    # create new list with event_names of all runs except current run:
-    event_names = [info for i, info in enumerate(event_names) if i != run]
+    if run:
+        # create new list with event_names of all runs except current run:
+        event_names = [info for i, info in enumerate(event_names) if i != run]
+        # create new list with subject info of all runs except current run:
+        subject_info = [info for i, info in enumerate(subject_info) if i != run]
+        # select all data func files that are task data:
+        data_func = [file for file in data_func if 'task-highspeed' in file]
+        # create new list with functional data of all runs except current run:
+        data_func = [info for i, info in enumerate(data_func) if i != run]
+
+    # get the number of event names for each run:
     num_events = [len(i) for i in event_names]
+    # get all the event names with the maximum number of available events:
     max_events = event_names[num_events.index(max(num_events))]
 
     # create list of contrasts:
     stim = 'correct_rejection'
     contrast1 = (stim, 'T', max_events, [1 if stim in s else 0 for s in max_events])
     contrasts = [contrast1]
-
-    # create new list with subject info of all runs except current run:
-    subject_info = [info for i, info in enumerate(subject_info) if i != run]
-    # select all data func files that are task data:
-    data_func = [file for file in data_func if 'task-highspeed' in file]
-    # create new list with functional data of all runs except current run:
-    data_func = [info for i, info in enumerate(data_func) if i != run]
 
     # return the new lists
     return subject_info, data_func, contrasts
