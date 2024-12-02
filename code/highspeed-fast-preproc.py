@@ -18,6 +18,7 @@ if cfg['code_execution'] == 'terminal':
 wf_main = workflow_main(cfg)
 write_graph(wf=wf_main, wf_name=wf_main.name, cfg=cfg)
 if 'darwin' in sys.platform:
+    wf_main.inputs.infosource.subject_id = 'sub-01'
     wf_main.run(plugin='Linear')
 elif 'linux' in sys.platform:
     wf_main.run(plugin='SLURM', plugin_args=dict(template=cfg['job_template']))
