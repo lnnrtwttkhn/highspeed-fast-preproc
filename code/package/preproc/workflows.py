@@ -47,7 +47,7 @@ def workflow_main(cfg):
         wf_main.connect(selectfiles, 'confounds', wf, 'subjectinfo.confounds')
         wf_main.connect(selectfiles, 'parc', wf, 'mask_binarize.in_file')
         wf_main.connect(trim, 'roi_file', wf, 'leaveoneout.data_func')
-        wf_main.connect(selectfiles, 'anat', wf, 'plot_contrasts.anat')
+        # wf_main.connect(selectfiles, 'anat', wf, 'plot_contrasts.anat')
         wf_main.connect(selectfiles, 'anat', wf, 'plot_roi_tmap_raw.bg_img')
         wf_main.connect(selectfiles, 'anat', wf, 'plot_roi_tmap_mask.bg_img')
     # execute / test nodes when running in interactive mode:
@@ -94,7 +94,7 @@ def workflow_l1analysis(cfg, mask, regressor, strategy):
     wf.connect(l1estimate, 'residual_image', l1contrasts, 'residual_image')
     wf.connect(l1contrasts, 'spmT_images', thresh, 'stat_image')
     wf.connect(l1contrasts, 'spm_mat_file', thresh, 'spm_mat_file')
-    wf.connect(l1contrasts, 'spmT_images', plot_contrasts, 'stat_map')
+    # wf.connect(l1contrasts, 'spmT_images', plot_contrasts, 'stat_map')
     wf.connect(l1contrasts, 'spmT_images', plot_tmap_raw, 'roi_img')
     wf.connect(l1contrasts, 'spmT_images', tmap_mask, 'tmap')
     wf.connect(mask_binarize, 'binary_file', tmap_mask, 'mask')
