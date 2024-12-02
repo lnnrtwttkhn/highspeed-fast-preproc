@@ -3,7 +3,15 @@
 
 from nipype.pipeline.engine import Node, MapNode
 from nipype.interfaces.utility import Function
-from nilearn import plotting
+
+
+def node_settings(node, node_cfg):
+    threads = 1
+    mem_mb = node_cfg.get('mem_mb', 0)
+    node.interface.num_threads = threads
+    node.interface.mem_gb = mem_mb / 1000.0
+    node.plugin_args = {'sbatch_args': f"--cpus-per-task={threads} --mem={mem_mb}MB", 'overwrite': True}
+    return node
 
 
 def node_infosource(cfg):
@@ -16,51 +24,24 @@ def node_infosource(cfg):
 
 
 def node_selectfiles(cfg):
+    from preproc.nodes import node_settings
     from nipype.interfaces.io import SelectFiles
     selectfiles = Node(SelectFiles(cfg['paths']['templates']), name='selectfiles')
     # optional input: sort_filelist (a boolean)
     # when matching mutliple files, return them in sorted order.
     # (Nipype default value: True)
     selectfiles.inputs.sort_filelist = cfg['selectfiles']['sort_filelist']
-    # set expected thread and memory usage for the node:
-    selectfiles.interface.num_threads = 1
-    selectfiles.interface.mem_gb = cfg['selectfiles']['mem_mb'] / 1000
-    selectfiles.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-    selectfiles.plugin_args = {'sbatch_args': '--mem {}MB'.format(cfg['selectfiles']['mem_mb']), 'overwrite': True}
+    # configure general node settings:
+    selectfiles = node_settings(node=selectfiles, node_cfg=cfg['selectfiles'])
     return selectfiles
 
 
-def node_binarize(cfg):
+def node_binarize(node_cfg):
     from nipype.interfaces.freesurfer import Binarize
-    binarize = MapNode(interface=Binarize(), name=cfg['name'], iterfield=['in_file'])
-    binarize.inputs.match = cfg['labels']
-    # set expected thread and memory usage for the node:
-    binarize.interface.mem_gb = cfg['mem_mb'] / 1000
-    binarize.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-    binarize.plugin_args = {'sbatch_args': '--mem {}MB'.format(cfg['mem_mb']), 'overwrite': True}
+    binarize = MapNode(interface=Binarize(), name='mask_binarize', iterfield=['in_file'])
+    binarize.inputs.match = node_cfg['labels']
+    binarize = node_settings(node=binarize, node_cfg=node_cfg)
     return binarize
-
-
-def node_plot_tmap_raw(cfg):
-    from preproc.plotting import plot_roi
-    name = 'plot_tmap_raw'
-    mem_mb = 1000
-    plot_tmap_raw = MapNode(Function(
-        input_names=['roi_img', 'bg_img', 'name', 'path_figures'],
-        output_names=['out_path'],
-        function=plot_roi,
-    ),
-        name=name,
-        iterfield=['roi_img']
-    )
-    plot_tmap_raw.name = name
-    plot_tmap_raw.path_figures = cfg['paths']['output']['figures']
-    # set expected thread and memory usage for the node:
-    plot_tmap_raw.interface.num_threads = 1
-    plot_tmap_raw.interface.mem_gb = mem_mb / 1000
-    plot_tmap_raw.plugin_args = {'sbatch_args': '--cpus-per-task 1', 'overwrite': True}
-    plot_tmap_raw.plugin_args = {'sbatch_args': '--mem {}MB'.format(mem_mb), 'overwrite': True}
-    return plot_tmap_raw
 
 
 def node_plot_roi(cfg, name):
@@ -119,7 +100,7 @@ def node_tmap_mask_thresh(cfg):
     )
     tmap_mask_tresh.inputs.path_output = cfg['paths']['output']['masks']
     # define the threshold as an iterable:
-    tmap_mask_tresh.iterables = ('treshhold', [1, 2, 3, 4])
+    tmap_mask_tresh.iterables = ('threshold', [1, 2, 3, 4])
     # set expected thread and memory usage for the node:
     tmap_mask_tresh.interface.num_threads = 1
     tmap_mask_tresh.interface.mem_gb = mem_mb / 1000
@@ -237,7 +218,7 @@ def node_susan(cfg):
     return susan
 
 
-def node_leaveoneout(cfg, leave_out, interest):
+def node_leaveoneout(cfg, strategy, regressor):
     from preproc.functions import leave_one_out
     from nipype.pipeline.engine import Node
     from nipype.interfaces.utility import Function
@@ -248,10 +229,10 @@ def node_leaveoneout(cfg, leave_out, interest):
         function=leave_one_out),
         name='leaveoneout')
     # define the number of runs as an iterable:
-    if leave_out == 'crossvalidate':
+    if strategy == 'crossvalidate':
         leaveoneout.iterables = ('run', range(cfg['num_runs']))
     # provide inputs for contrast specification:
-    leaveoneout.inputs.interest = interest
+    leaveoneout.inputs.regressor = regressor
     return leaveoneout
 
 
@@ -374,7 +355,6 @@ def node_l1contrasts(cfg):
 
 
 def node_trim(cfg):
-    from nipype.pipeline.engine import MapNode
     from nipype.interfaces.fsl.utils import ExtractROI
     # function: uses FSL Fslroi command to extract region of interest (ROI) from an image.
     # here we use it to remove dummy volumes (e.g., TRs at the beginning of a run)
