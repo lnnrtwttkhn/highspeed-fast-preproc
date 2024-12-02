@@ -9,7 +9,9 @@ cffi==1.16.0
 chardet==4.0.0
 ci-info==0.2.0
 click==7.1.2
+contourpy==1.1.1
 cryptography==43.0.0
+cycler==0.12.1
 datalad==0.14.0
 decorator==4.4.2
 Deprecated==1.2.11
@@ -18,6 +20,7 @@ docopt==0.6.2
 etelemetry==0.2.2
 fasteners==0.16
 filelock==3.0.12
+fonttools==4.55.0
 future==0.18.2
 humanize==3.2.0
 idna==2.10
@@ -35,7 +38,9 @@ jupyter-client==6.1.11
 jupyter-core==4.7.1
 keyring==22.0.1
 keyrings.alt==4.0.2
+kiwisolver==1.4.7
 lxml==4.6.2
+matplotlib==3.7.5
 msgpack==1.0.2
 nest-asyncio==1.5.1
 networkx==2.5
@@ -52,7 +57,8 @@ patool==1.12
 patsy==0.5.1
 pexpect==4.8.0
 pickleshare==0.7.5
--e git+ssh://git@github.com/lnnrtwttkhn/highspeed-fast-preproc.git@b61d316bc7e738a6985fdac3bed187e06a6bf9e4#egg=preproc&subdirectory=code/package
+pillow==10.4.0
+-e git+ssh://git@github.com/lnnrtwttkhn/highspeed-fast-preproc.git@07e85c85399139a065cec22946ae2bdba74bd90d#egg=preproc&subdirectory=code/package
 prompt-toolkit==3.0.14
 prov==2.0.0
 ptyprocess==0.7.0
