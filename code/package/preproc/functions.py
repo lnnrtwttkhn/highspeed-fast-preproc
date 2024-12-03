@@ -36,7 +36,6 @@ def config():
             'TF_CPP_MIN_LOG_LEVEL': '3',
             'MCR_INHIBIT_CTF_LOCK': '1',
         },
-        'time_repetition': 1.25,
         'num_runs': 8,
         'selectfiles': {
             # when matching mutliple files, return them in sorted order.
