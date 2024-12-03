@@ -21,7 +21,7 @@ def workflow_main(cfg):
     wf_main.base_dir = cfg['paths']['output']['work']
     wf_main.config = {
         'execution': {'stop_on_first_crash': True, 'hash_method': 'timestamp'},
-        'logging': {'interface_level': 'INFO', 'workflow_level': 'INFO'}
+        'logging': {'interface_level': 'DEBUG', 'workflow_level': 'DEBUG'}
     }
     regressors = ['correct_rejection']
     strategies = ['all', 'crossvalidate']
