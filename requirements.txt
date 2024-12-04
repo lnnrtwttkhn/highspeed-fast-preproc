@@ -68,7 +68,7 @@ tornado==6.1
 tqdm==4.56.0
 traitlets==5.0.5
 traits==6.2.0
-urllib3==1.26.3
+urllib3==1.26.19
 wcwidth==0.2.5
 Whoosh==2.7.4
 wrapt==1.12.1
