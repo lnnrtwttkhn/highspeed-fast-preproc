@@ -40,7 +40,7 @@ siblings:
 	-datalad siblings add --dataset inputs/fmriprep --name local --url ../../../highspeed-fast-fmriprep
 
 run:
-	@echo "module load python/3.12.3 && source $(VENV_DIR)/bin/activate && python $(PYTHON_SCRIPT)"
+	@echo "module load python/3.12.3 && source $(VENV_DIR)/bin/activate && make package && python3 $(PYTHON_SCRIPT)"
 
 clean:
 	@rm -rf *.pklz
