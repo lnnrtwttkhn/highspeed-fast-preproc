@@ -44,8 +44,9 @@ run:
 
 clean:
 	@rm -rf *.pklz
-	@rm -rf work
-	@rm -rf logs
+	@rm -rf outputs/*/work
+	@rm -rf outputs/*/logs
+	@rm -rf pyscript.m
 
 save-data:
 	datalad save -d outputs -m "Add / update all relevant data" \
