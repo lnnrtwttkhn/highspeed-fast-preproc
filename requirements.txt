@@ -1,3 +1,4 @@
+acres==0.1.0
 annexremote==1.6.5
 appnope==0.1.4
 astor==0.8.1
@@ -52,7 +53,7 @@ nest-asyncio==1.6.0
 networkx==3.3
 nibabel==5.2.1
 niflow-nipype1-workflows==0.0.5
-nipype==1.8.6
+nipype==1.9.1
 num2words==0.5.13
 numpy==1.26.4
 packaging==24.1
@@ -66,6 +67,7 @@ prov==2.0.1
 psutil==6.0.0
 ptyprocess==0.7.0
 pure-eval==0.2.2
+puremagic==1.28
 pybids==0.16.5
 pycparser==2.22
 pydot==3.0.1
@@ -92,7 +94,7 @@ threadpoolctl==3.5.0
 tornado==6.4.1
 tqdm==4.66.4
 traitlets==5.14.3
-traits==6.3.2
+traits==6.4.3
 typing_extensions==4.12.2
 tzdata==2024.1
 urllib3==2.2.2
