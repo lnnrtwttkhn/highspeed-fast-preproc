@@ -60,7 +60,6 @@ parso==0.8.4
 patool==2.3.0
 pexpect==4.9.0
 platformdirs==4.2.2
--e git+ssh://git@github.com/lnnrtwttkhn/highspeed-fast-preproc.git@147f7bbff25798858e746b3c18e7e9d1b9825217#egg=preproc&subdirectory=code/package
 prompt_toolkit==3.0.47
 prov==2.0.1
 psutil==6.0.0
