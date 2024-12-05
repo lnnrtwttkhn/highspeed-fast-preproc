@@ -224,7 +224,7 @@ def node_leaveoneout(cfg, strategy, regressor):
     from nipype.interfaces.utility import Function
     # function: leave-one-out selection of data:
     leaveoneout = Node(Function(
-        input_names=['subject_info', 'event_names', 'data_func', 'interest', 'run'],
+        input_names=['subject_info', 'event_names', 'data_func', 'regressor', 'run'],
         output_names=['subject_info', 'data_func', 'contrasts'],
         function=leave_one_out),
         name='leaveoneout')
