@@ -156,7 +156,7 @@ def config():
             'timing_units': 'secs',
             # optional input: model_serial_correlations ('AR(1)' or 'FAST' or 'none')
             # model serial correlations AR(1), FAST or none. FAST is available in SPM12.
-            'model_serial_correlations': 'AR(1)',
+            'model_serial_correlations': 'FAST',
             # memory demand:
             'mem_mb': 10000,
         },
