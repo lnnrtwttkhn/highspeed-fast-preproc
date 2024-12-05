@@ -14,18 +14,11 @@ def setup():
     cfg = get_execution(cfg)
     cfg = get_subs(cfg)
     cfg = get_paths(cfg)
-    cfg['time_repetition'] = get_time_repetition(cfg['paths']['bids'])
+    cfg = get_mri_parameters(cfg)
     cfg = setup_logger(cfg)
     cfg = get_job_template(cfg)
     cfg = write_cfg(cfg)
     return cfg
-
-
-def get_time_repetition(path_bids):
-    # time of repetition, in seconds:
-    bids_layout = bids.BIDSLayout(root=path_bids)
-    time_repetition = bids_layout.get_tr()
-    return time_repetition
 
 
 def config():
@@ -161,18 +154,6 @@ def config():
             # mandatory input: timing_units ('secs' or 'scans')
             # units for specification of onsets.
             'timing_units': 'secs',
-            # optional input: microtime_onset (a float)
-            # the onset/time-bin in seconds for alignment (opt).
-            # depends on slice-timing correction: if slice-timing correction was
-            # performed in reference to middle slice (default in fMRIPrep),
-            # it should be half of the microtime_resolution
-            'microtime_onset': 8,
-            # optional input: microtime_resolution (an integer)
-            # number of time-bins per scan in secs (opt).
-            # traditionally it's number of slices
-            # with multi-band it's number of slices divided by multiband factor
-            # e.g., with 64 slices and MB4, it's 16
-            'microtime_resolution': 16,
             # optional input: model_serial_correlations ('AR(1)' or 'FAST' or 'none')
             # model serial correlations AR(1), FAST or none. FAST is available in SPM12.
             'model_serial_correlations': 'AR(1)',
@@ -493,6 +474,57 @@ def get_subs(cfg):
     sub_list.remove('sub-06')
     cfg['sub_list'] = sub_list
     return cfg
+
+
+def get_mri_parameters(cfg):
+    # query bids dataset:
+    layout = bids.BIDSLayout(root=cfg['paths']['bids'])
+    cfg['time_repetition'] = get_time_repetition(layout)
+    cfg['num_slices'] = get_num_slices(layout)
+    cfg['multiband_factor'] = get_multiband_factor(layout)
+    return cfg
+
+
+def get_time_repetition(layout):
+    # time of repetition, in seconds:
+    time_repetition = layout.get_tr()
+    return time_repetition
+
+
+def get_num_slices(layout):
+    # get all functional task acqusitions:
+    func_files = layout.get(extension='nii.gz', suffix='bold', task='highspeed')
+    shapes = []
+    z_dim_index = 2
+    for i in func_files:
+        metadata = i.get_metadata() if hasattr(i, 'get_metadata') else None
+        if metadata and 'dcmmeta_shape' in metadata:
+            dcmmeta_shape = metadata['dcmmeta_shape']
+            if isinstance(dcmmeta_shape, list) and z_dim_index < len(dcmmeta_shape):
+                shapes.append(dcmmeta_shape[z_dim_index])
+            else:
+                shapes.append(None)
+        else:
+            shapes.append(None)
+    num_slices = list({shape for shape in shapes if shape is not None})
+    assert len(num_slices) == 1
+    return num_slices[0]
+
+
+def get_multiband_factor(layout):
+    # get all functional task acqusitions:
+    func_files = layout.get(extension='nii.gz', suffix='bold', task='highspeed')
+    mb_factors = []
+    for i in func_files:
+        metadata = i.get_metadata() if hasattr(i, 'get_metadata') else None
+        if metadata and 'MultibandAccelerationFactor' in metadata:
+            mb = metadata['MultibandAccelerationFactor']
+            mb_factors.append(mb)
+        else:
+            mb_factors.append(None)
+    mb_factor = list({shape for shape in mb_factors if shape is not None})
+    assert len(mb_factor) == 1
+    return mb_factor[0]
 
 
 def replace_nan(regressor_values):
