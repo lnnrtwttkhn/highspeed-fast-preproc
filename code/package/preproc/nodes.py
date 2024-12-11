@@ -305,10 +305,18 @@ def node_l1design(cfg):
     l1design.inputs.timing_units = cfg['l1design']['timing_units']
     # input: interscan interval / repetition time in secs (a float):
     l1design.inputs.interscan_interval = cfg['time_repetition']
-    # input: number of time-bins per scan in secs (an integer):
-    l1design.inputs.microtime_resolution = cfg['l1design']['microtime_resolution']
-    # input: the onset/time-bin in seconds for alignment (a float):
-    l1design.inputs.microtime_onset = cfg['l1design']['microtime_onset']
+    # optional input: microtime_resolution (an integer)
+    # number of time-bins per scan in secs (opt).
+    # traditionally it's number of slices
+    # with multi-band it's number of slices divided by multiband factor
+    # e.g., with 64 slices and MB4, it's 16
+    l1design.inputs.microtime_resolution = int(cfg['num_slices'] / cfg['multiband_factor'])
+    # optional input: microtime_onset (a float)
+    # the onset/time-bin in seconds for alignment.
+    # depends on slice-timing correction: if slice-timing correction was
+    # performed in reference to middle slice (default in fMRIPrep),
+    # it should be half of the microtime_resolution
+    l1design.inputs.microtime_onset = float(cfg['num_slices'] / cfg['multiband_factor'] / 2)
     # input: Model serial correlations AR(1), FAST or none:
     l1design.inputs.model_serial_correlations = cfg['l1design']['model_serial_correlations']
     # set expected thread and memory usage for the node:

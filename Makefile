@@ -1,5 +1,5 @@
 VENV_DIR := venv
-PYTHON := python3
+PYTHON := python3.12
 REQUIREMENTS_FILE := requirements.txt
 PYTHON_SCRIPT := code/highspeed-fast-preproc.py
 
@@ -40,7 +40,7 @@ siblings:
 	-datalad siblings add --dataset inputs/fmriprep --name local --url ../../../highspeed-fast-fmriprep
 
 run:
-	@echo "module load python/3.12.3 && source $(VENV_DIR)/bin/activate && make package && python3 $(PYTHON_SCRIPT)"
+	@echo "module load $(PYTHON) && source $(VENV_DIR)/bin/activate && make package && $(PYTHON) $(PYTHON_SCRIPT)"
 
 clean:
 	@rm -rf *.pklz
