@@ -177,7 +177,7 @@ def config():
             # model serial correlations AR(1), FAST or none. FAST is available in SPM12.
             'model_serial_correlations': 'AR(1)',
             # memory demand:
-            'mem_mb': 10000,
+            'mem_mb': 15000,
         },
         'l1estimate': {
             # mandatory input: estimation_method (a dictionary with keys which are 'Classical' or 'Bayesian2' or 'Bayesian'
