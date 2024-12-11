@@ -75,7 +75,7 @@ def node_tmap_mask(cfg):
         function=get_tmap_mask,
     ),
         name=name,
-        iterfield=['tmap', 'mask']
+        iterfield=['mask']
     )
     tmap_mask.path_output = cfg['paths']['output']['masks']
     # set expected thread and memory usage for the node:
